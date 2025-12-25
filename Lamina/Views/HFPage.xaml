@@ -1,0 +1,30 @@
+﻿<Page
+    x:Class="Lamina.Views.HFPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{x:Null}">
+    <Grid Background="Transparent">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Stretch" Margin="0,20,0,0" Spacing="8">
+            <TextBlock Text="First Side [a] :" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBox x:Name="SideATextBox" Width="200"  HorizontalAlignment="Stretch"/>
+            <TextBlock Text="Second Side [b] :" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBox x:Name="SideBTextBox" Width="200" HorizontalAlignment="Stretch"/>
+            <TextBlock Text="Third Side [c] :" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBox x:Name="SideCTextBox" Width="200" HorizontalAlignment="Stretch"/>
+            <Button Content="Calculate"
+        x:Name="CalculateButton"
+        Click="CalculateButton_Click"
+        HorizontalAlignment="Center"
+        Margin="0,15,0,0"
+        Style="{StaticResource AccentButtonStyle}">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Enter" />
+                </Button.KeyboardAccelerators>
+            </Button>
+            <TextBlock x:Name="AreaTextBlock" IsTextSelectionEnabled="True" Text="OUTPUT AREA" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" FontWeight="SemiBold" FontSize="12"/>
+        </StackPanel>
+    </Grid>
+</Page>

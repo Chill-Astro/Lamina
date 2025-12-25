@@ -1,0 +1,10 @@
+﻿{
+    "profiles": {
+      "Lamina (Package)": {
+        "commandName": "MsixPackage"
+      },
+      "Lamina (Unpackaged)": {
+        "commandName": "Project"
+      }
+    }
+}

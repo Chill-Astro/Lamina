@@ -1,0 +1,97 @@
+﻿<Page
+    x:Class="Lamina.Views.CurrencyPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Grid Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ToolTipService.ToolTip>
+            <ToolTip Content="Currency rates are provided by exchangerate-api.com. Use the refresh button to update the list."/>
+        </ToolTipService.ToolTip>
+
+        <Button
+            Width="35"
+            Height="35"
+            Margin="0,-52,1,0"
+            Padding="2"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Background="Transparent"
+            BorderThickness="0"
+            Click="RefreshButton_Click"
+            Content="&#xE72C;"
+            CornerRadius="3"
+            FontFamily="ms-appx:///Assets/Fonts/Segoe.ttf#Segoe Fluent Icons"
+            FontSize="16">
+            <ToolTipService.ToolTip>
+                <ToolTip Content="Refresh currency list"/>
+            </ToolTipService.ToolTip>
+        </Button>
+
+        <StackPanel
+            Margin="0,20,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Spacing="10"
+            Grid.Row="0">
+            <TextBlock
+                HorizontalAlignment="Center"
+                Style="{StaticResource BaseTextBlockStyle}"
+                Text="Enter Amount:" />
+            <TextBox
+                x:Name="InputTextBox"
+                Width="250"
+                HorizontalAlignment="Stretch" />
+
+            <TextBlock
+                HorizontalAlignment="Center"
+                Style="{StaticResource BaseTextBlockStyle}"
+                Text="From Currency:" />
+            <ComboBox
+                x:Name="FromCurrencyComboBox"
+                Width="250"
+                HorizontalAlignment="Stretch"
+                SelectedIndex="0" />
+
+            <TextBlock
+                HorizontalAlignment="Center"
+                Style="{StaticResource BaseTextBlockStyle}"
+                Text="To Currency:" />
+            <ComboBox
+                x:Name="ToCurrencyComboBox"
+                Width="250"
+                HorizontalAlignment="Stretch"
+                SelectedIndex="0" />
+
+            <Button
+                Margin="0,15,0,0"
+                HorizontalAlignment="Center"
+                Click="ConvertButton_Click"
+                Content="Convert"
+                Style="{StaticResource AccentButtonStyle}" />
+
+            <TextBlock
+                x:Name="ResultTextBlock"
+                HorizontalAlignment="Center"
+                FontSize="12"
+                FontWeight="SemiBold"
+                IsTextSelectionEnabled="True"
+                Style="{StaticResource BodyTextBlockStyle}"
+                Text="OUTPUT AREA" />
+        </StackPanel>
+
+        <ProgressBar x:Name="LoadingProgressBar"
+                     Grid.Row="1"
+                     Height="4"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Bottom"
+                     Margin="0"
+                     IsIndeterminate="True"
+                     Visibility="Collapsed"/>
+    </Grid>
+</Page>

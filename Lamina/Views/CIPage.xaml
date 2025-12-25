@@ -1,0 +1,28 @@
+﻿<Page
+    x:Class="Lamina.Views.CIPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{x:Null}">
+    <Grid Background="Transparent">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Stretch" Margin="0,20,0,0" Spacing="8">
+            <TextBlock Text="Principal :" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBox x:Name="CIPrincipalTextBox" Width="200" HorizontalAlignment="Stretch"/>
+            <TextBlock Text="Rate [%] :" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBox x:Name="CIRateTextBox" Width="200" HorizontalAlignment="Stretch"/>
+            <TextBlock Text="Time [Years]:" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBox x:Name="CITimeTextBox" Width="200" HorizontalAlignment="Stretch"/>
+            <TextBlock Text="Compounding Frequency [n] :" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBox x:Name="CompoundingFrequencyTextBox" Width="200" HorizontalAlignment="Stretch"/>
+            <Button Content="Calculate"
+                    x:Name="CalculateCIButton"
+                    Click="CalculateCIButton_Click"
+                    HorizontalAlignment="Center"
+                    Margin="0,15,0,0"
+                    Style="{StaticResource AccentButtonStyle}" />
+            <TextBlock x:Name="CompoundInterestTextBlock" Text="OUTPUT AREA" FontWeight="SemiBold" IsTextSelectionEnabled="True" FontSize="12" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Page>

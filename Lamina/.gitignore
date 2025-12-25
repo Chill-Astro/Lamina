@@ -366,5 +366,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/Calculator/appsettings.json
-/Calculator/appsettings.json

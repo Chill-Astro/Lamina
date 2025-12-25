@@ -1,0 +1,29 @@
+﻿<Application
+    x:Class="Lamina.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+                <ResourceDictionary Source="/Styles/FontSizes.xaml" />
+                <ResourceDictionary Source="/Styles/Thickness.xaml" />
+                <ResourceDictionary Source="/Styles/TextBlock.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{ThemeResource SystemAccentColorDark1}"/>
+                    <SolidColorBrush x:Key="AccentButtonHoverBackground" Color="{ThemeResource SystemAccentColorDark2}"/>
+                    <SolidColorBrush x:Key="AccentButtonPressedBackground" Color="{ThemeResource SystemAccentColorDark3}"/>
+                    <SolidColorBrush x:Key="AccentButtonForeground" Color="Black"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{ThemeResource SystemAccentColorLight3}"/>
+                    <SolidColorBrush x:Key="AccentButtonHoverBackground" Color="{ThemeResource SystemAccentColorLight3}"/>
+                    <SolidColorBrush x:Key="AccentButtonPressedBackground" Color="{ThemeResource SystemAccentColorLight1}"/>
+                    <SolidColorBrush x:Key="AccentButtonForeground" Color="White"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
