@@ -112,14 +112,14 @@ https://github.com/user-attachments/assets/870b4683-0e88-4f46-b4e2-9220e19e9a86
   - [XAML Styler](https://marketplace.visualstudio.com/items?itemName=TeamXavalon.XAMLStyler) is recommended for contributing.
   - .NET 10.0 Runtime LTS is must.
   - Get the latest Windows 11 SDK [26100.xxxx].
-  - Commnity Edition is sufficient for contributing and testing. Pro and Enterprise Editions can also be used.
+  - Community Edition is sufficient for contributing and testing. Pro and Enterprise Editions can also be used.
   - Github Copilot and Live Share can be skipped for Storage Saving.
  
 ![image](https://github.com/user-attachments/assets/0a18b87a-de85-40f9-80bc-ef2575dc221c)
 
 - Get the Code :
   
-      git clone https://github.com/Chill-Astro/Calculator.git
+      git clone https://github.com/Chill-Astro/Lamina.git
 
 - Open [Calculator.sln](/Calculator.sln) in Visual Studio.
 - Hit Deploy as shown in Screenshot. [Building is Automatically Done while Deploying.]
