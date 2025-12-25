@@ -1,19 +1,19 @@
 <p align="center">
-  <img src="https://github.com/Chill-Astro/Calculator/blob/main/Calculator/Assets/StoreLogo.scale-400.png" width="100px" height="100px" alt="Calculator Logo">
+  <img src="https://github.com/Chill-Astro/Lamina/blob/main/Lamina/Assets/StoreLogo.scale-400.png" width="100px" height="100px" alt="Calculator Logo">
 </p>
-<h1 align="center">Calculator</h1>
+<h1 align="center">Laminar</h1>
 
 <div align="center">
   
-A **Windows 11** native **WinUI 3 calculator** application that is **Elevated with Powerful Scripted Actions**. This utility combines a modern, clean interface with the ability to perform complex calculations across **Mensuration, Finance, and Unit Conversions**, making it significantly more powerful than standard calculators.
+Lamina is a **Windows 11** native **WinUI 3 calculator** application that is **Elevated with Powerful Scripted Actions**. This utility combines a modern, clean interface with the ability to perform complex calculations across **Mensuration, Finance, and Unit Conversions**, making it significantly more powerful than standard calculators.
   
-**Target OS:** **Windows 11** ONLY.  |  **Latest Stable Version:** **v11.26100.11.0**
+**Target OS:** **Windows 11** ONLY.  |  **Latest Stable Version:** **v11.26100.12.0**
 
 **App Execution Aliases**
 
-**Msix Release:** `calc+.exe` & `calculator.exe` 
+**Msix Release:** `lamina.exe` & `lmna.exe` 
 
-**Installer Release:** `calculator.exe`
+**Installer Release:** `lamina.exe`
 
 </div>
 
@@ -25,10 +25,10 @@ I am currently unable to update and maintain this project due to my upcoming ICS
 
 ---
 
-## Scripted Actions Included [ as of v11.26100.11.0 ] :
+## Scripted Actions Included [ as of v11.26100.12.0 ] :
 
 - Base Calculator UI.
-- Scientific Calculator UI [ "Possibility" for v11.26100.12.0 ]
+- Scientific Calculator UI [ "Possibility" for v11.26100.13.0 ]
 - Convertors :
   * Unit Convertor
   * Currency Convertor
@@ -69,9 +69,9 @@ I am currently unable to update and maintain this project due to my upcoming ICS
 
 ---
 
-## Install Calculator [ Installer ] from Winget :
+## Install Lamina [ Installer ] from Winget :
       
-      winget install Calculator.unp
+      winget install Lamina.unp
 
 ---
 
@@ -93,7 +93,7 @@ https://github.com/user-attachments/assets/870b4683-0e88-4f46-b4e2-9220e19e9a86
 
 ## Installation : 
 
-1.  Download the `.msix` and `.cer` files from the [latest release.](https://github.com/Chill-Astro/Calculator/releases/latest)
+1.  Download the `.msix` and `.cer` files from the [latest release.](https://github.com/Chill-Astro/Lamina/releases/latest)
 2.  Import the `.cer` file to the `Trusted Root Certificates` Store. [ ONLY ON FIRST RUN! ].
 3.  Install the `.msix` file.
 
@@ -164,7 +164,7 @@ Calculator uses [ExchangeRate-API](https://app.exchangerate-api.com) for Currenc
 Please be aware: There are fraudulent repositories on GitHub that are cloning this project's name and using AI-generated readmes, but they contain **completely random and unrelated files in each release**. These are NOT official versions of this project.
 
 **ALWAYS ensure you are downloading or cloning this project ONLY from its official and legitimate source:**
-`https://github.com/Chill-Astro/Calculator`
+`https://github.com/Chill-Astro/Lamina`
 
 I am trying my best to report these people.
 
