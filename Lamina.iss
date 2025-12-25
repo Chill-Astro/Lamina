@@ -20,27 +20,50 @@ ArchitecturesInstallIn64BitMode=x64compatible
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
 LicenseFile=C:\Users\Master\Chill-Astro\Lamina\LICENSE.txt
-PrivilegesRequired=admin
-OutputBaseFilename=Lamina-Setup
-SolidCompression=yes
 DisableWelcomePage=no
 WizardStyle=modern dynamic windows11
+OutputBaseFilename=Lamina-Setup
+SolidCompression=yes
+PrivilegesRequired=admin
+
+[InstallDelete]
+Type: filesandordirs; Name: "{app}\*"
+
+[Dirs]
+Name: "{app}"; Permissions: users-full
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: "armenian"; MessagesFile: "compiler:Languages\Armenian.isl"
+Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+Name: "catalan"; MessagesFile: "compiler:Languages\Catalan.isl"
+Name: "corsican"; MessagesFile: "compiler:Languages\Corsican.isl"
+Name: "czech"; MessagesFile: "compiler:Languages\Czech.isl"
+Name: "danish"; MessagesFile: "compiler:Languages\Danish.isl"
+Name: "dutch"; MessagesFile: "compiler:Languages\Dutch.isl"
+Name: "finnish"; MessagesFile: "compiler:Languages\Finnish.isl"
+Name: "french"; MessagesFile: "compiler:Languages\French.isl"
+Name: "german"; MessagesFile: "compiler:Languages\German.isl"
+Name: "hebrew"; MessagesFile: "compiler:Languages\Hebrew.isl"
+Name: "italian"; MessagesFile: "compiler:Languages\Italian.isl"
+Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl"
+Name: "norwegian"; MessagesFile: "compiler:Languages\Norwegian.isl"
+Name: "polish"; MessagesFile: "compiler:Languages\Polish.isl"
+Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
+Name: "slovak"; MessagesFile: "compiler:Languages\Slovak.isl"
+Name: "slovenian"; MessagesFile: "compiler:Languages\Slovenian.isl"
+Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "turkish"; MessagesFile: "compiler:Languages\Turkish.isl"
+Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 
 [Tasks]
-; Restored Task UI
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-; 1. Copy EVERYTHING to the Downloads folder first for the "Sandbox" install
-Source: "C:\Users\Master\Chill-Astro\Lamina\Lamina-Installer\*"; DestDir: "{userdocs}\..\Downloads\Lamina_App"; Flags: ignoreversion recursesubdirs createallsubdirs
-; 2. Also copy to Program Files as the permanent home
-Source: "C:\Users\Master\Chill-Astro\Lamina\Lamina-Installer\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "*.msix,InstallDeps.ps1"
+Source: "C:\Users\Master\Chill-Astro\Lamina\Lamina-Installer\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Registry]
-; Restored File Associations & Path
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppAssocKey}"; ValueData: ""; Flags: uninsdeletevalue
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}"; ValueType: string; ValueName: ""; ValueData: "{#MyAppAssocName}"; Flags: uninsdeletekey
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
@@ -52,22 +75,16 @@ Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-; The final "Launch" checkbox on the modern UI
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
 
 [Code]
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   ResultCode: Integer;
-  ScriptPath: String;
 begin
   if CurStep = ssPostInstall then
   begin
-      // Path to script in the Downloads Sandbox
-      ScriptPath := ExpandConstant('{userdocs}\..\Downloads\Lamina_App\InstallDeps.ps1');
-      
-      // Run the script. We wait (ewWaitUntilTerminated) so the dependencies 
-      // are fixed before the user can click the "Finish" button to launch.
-      Exec('powershell.exe', '-ExecutionPolicy Bypass -WindowStyle Normal -File "' + ScriptPath + '"', '', SW_SHOW, ewWaitUntilTerminated, ResultCode);
+      Exec('powershell.exe', '-ExecutionPolicy Bypass -WindowStyle Normal -File "' + ExpandConstant('{app}\InstallDeps.ps1') + '"', '', SW_SHOW, ewWaitUntilTerminated, ResultCode);
+      DeleteFile(ExpandConstant('{app}\InstallDeps.ps1'));
   end;
 end;

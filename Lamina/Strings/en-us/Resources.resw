@@ -124,7 +124,7 @@
     <value>Lamina</value>
   </data>
   <data name="Shell_Calculator.Content" xml:space="preserve">
-    <value>Lamina</value>
+    <value>Calculator</value>
   </data>
   <data name="Shell_HF.Content" xml:space="preserve">
     <value>Heron's Formula</value>
@@ -151,31 +151,31 @@
     <value>Default</value>
   </data>
   <data name="Shell_Factorial.Content" xml:space="preserve">
-    <value>Factorial Lamina</value>
+    <value>Factorial Calculator</value>
   </data>
   <data name="Shell_Approx.Content" xml:space="preserve">
     <value>Approximation</value>
   </data>
   <data name="Shell_Area.Content" xml:space="preserve">
-    <value>Area Lamina</value>
+    <value>Area Calculator</value>
   </data>
   <data name="Shell_Volume.Content" xml:space="preserve">
-    <value>Volume Lamina</value>
+    <value>Volume Calculator</value>
   </data>
   <data name="Shell_SurfaceArea.Content" xml:space="preserve">
     <value>Total Surface Area</value>
   </data>
   <data name="Shell_Diagonal.Content" xml:space="preserve">
-    <value>Diagonal Lamina</value>
+    <value>Diagonal Calculator</value>
   </data>
   <data name="Shell_Perimeter.Content" xml:space="preserve">
-    <value>Perimeter Lamina</value>
+    <value>Perimeter Calculator</value>
   </data>
   <data name="Shell_PrimeCheck.Content" xml:space="preserve">
     <value>Prime no. Checker</value>
   </data>
   <data name="Shell_AgeCalc.Content" xml:space="preserve">
-    <value>Age Lamina</value>
+    <value>Age Calculator</value>
   </data>
   <data name="Shell_RTCheck.Content" xml:space="preserve">
     <value>Right Triangle Checker</value>
@@ -184,10 +184,10 @@
     <value>Curved Surface Area</value>
   </data>
   <data name="Shell_Dicount.Content" xml:space="preserve">
-    <value>Dicounted Price Lamina</value>
+    <value>Dicounted Price Calculator</value>
   </data>
   <data name="Shell_DateDifference.Content" xml:space="preserve">
-    <value>Date Difference Lamina</value>
+    <value>Date Difference Calculator</value>
   </data>
   <data name="Shell_UnitConverter.Content" xml:space="preserve">
     <value>Unit Converter</value>

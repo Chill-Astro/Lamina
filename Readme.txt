@@ -1,4 +1,4 @@
-First, disable MSIX Packaging in Calculator Properties in Visual Studio.
+First, disable MSIX Packaging in Lamina Properties in Visual Studio.
 
 Export using this code :
 
