@@ -101,7 +101,7 @@ https://github.com/user-attachments/assets/870b4683-0e88-4f46-b4e2-9220e19e9a86
   ---------------------[ OR ]---------------------
 </p>
 
--  Download the `Calculator-Setup.msi` to install the app easily.
+-  Download the `Lamina-Setup.exe` to install the app easily.
 
 ---
 
