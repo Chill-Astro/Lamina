@@ -8,7 +8,7 @@
 
 <div align="center">
   
-Lamina is a **Windows 11** native **WinUI 3 calculator** application that is **Elevated with Powerful Scripted Actions**. This utility combines a modern, clean interface with the ability to perform complex calculations across **Mensuration, Finance, and Unit Conversions**, making it significantly more powerful than standard calculators.
+Lamina ✦ is a **Windows 11** native **WinUI 3 calculator** application that is **Elevated with Powerful Scripted Actions**. This utility combines a modern, clean interface with the ability to perform complex calculations across **Mensuration, Finance, and Unit Conversions**, making it significantly more powerful than standard calculators.
   
 **Target OS:** **Windows 11** ONLY.  |  **Latest Stable Version:** **v11.26100.12.0**
 
@@ -124,12 +124,12 @@ https://github.com/user-attachments/assets/870b4683-0e88-4f46-b4e2-9220e19e9a86
   
       git clone https://github.com/Chill-Astro/Lamina.git
 
-- Open [Calculator.sln](/Calculator.sln) in Visual Studio.
+- Open [Lamina.sln](/Lamina.sln) in Visual Studio.
 - Hit Deploy as shown in Screenshot. [Building is Automatically Done while Deploying.]
 
 ![image](https://github.com/user-attachments/assets/d343c12f-03c0-4e52-95d8-925c5262f304)
 
-Calculator is now Deployed and now it shall appear in the Start Menu.
+Lamina is now Deployed and now it shall appear in the Start Menu.
 
 ![image](https://github.com/user-attachments/assets/99678fdb-c955-4818-a7bf-5d58fdfa1cfd)
 
@@ -137,7 +137,7 @@ Calculator is now Deployed and now it shall appear in the Start Menu.
 
 ## Adding Currency Convertor :
 
-Calculator uses [ExchangeRate-API](https://app.exchangerate-api.com) for Currency conversion. An API key must be mannualy added in the region indicated.
+Lamina ✦ uses [ExchangeRate-API](https://app.exchangerate-api.com) for Currency conversion. An API key must be mannualy added in the region indicated.
 
 - Open `appsettings.json` : Paste the Code into here.
 
