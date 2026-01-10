@@ -1,10 +1,8 @@
 <p align="center">
-  <img src="https://github.com/Chill-Astro/Lamina/blob/main/Lamina/Assets/StoreLogo.scale-400.png" width="100px" height="100px" alt="Calculator Logo">
+  <kbd>
+  <img width="1080" alt="Lamina Promo" src="https://github.com/user-attachments/assets/ee854962-4297-485f-944a-9a416f49c84c" />
+  </kbd>
 </p>
-<h1 align="center">
-  Lamina ✦ <br> 
-  <i>"Math on a Sheet of Glass"</i>
-</h1>
 
 <div align="center">
   
