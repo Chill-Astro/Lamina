@@ -76,11 +76,7 @@ I am currently unable to update and maintain this project due to my upcoming ICS
 
 ---
 
-## Previews :
-
-- Image Preview :
-
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/fde63b84-3529-4261-814b-2b7c85022ece" />
+## Video Previews :
 
 - History Preview [ TO BE UPDATED ] :
 
