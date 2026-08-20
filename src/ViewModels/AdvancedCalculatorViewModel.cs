@@ -16,6 +16,8 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     private string _operationText = "";
     private bool _isInverse;
     private string _angleModeText = "DEG";
+    private int _cursorPosition = 0;
+    private bool _isEditing = false;
 
     public ObservableCollection<string> CalculationHistory { get; } = new();
 
@@ -32,6 +34,9 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         NegateCommand = new RelayCommand(Negate);
         ReciprocalCommand = new RelayCommand(Reciprocal);
         PasteCommand = new RelayCommand<string>(Paste);
+        MoveCursorLeftCommand = new RelayCommand(MoveCursorLeft);
+        MoveCursorRightCommand = new RelayCommand(MoveCursorRight);
+        MoveCursorToPositionCommand = new RelayCommand<int>(MoveCursorToPosition);
     }
 
     #region Properties
@@ -39,7 +44,18 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     public string DisplayText
     {
         get => _displayText;
-        set => SetProperty(ref _displayText, value);
+        set
+        {
+            if (SetProperty(ref _displayText, value))
+            {
+                // Adjust cursor position if text changed from button input
+                if (value != null && _cursorPosition > value.Length && !_isEditing)
+                {
+                    _cursorPosition = value.Length;
+                    OnPropertyChanged(nameof(CursorPosition));
+                }
+            }
+        }
     }
 
     public string OperationText
@@ -79,6 +95,18 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     public string CosDisplay => IsInverse ? "cos⁻¹" : "cos";
     public string TanDisplay => IsInverse ? "tan⁻¹" : "tan";
 
+    public int CursorPosition
+    {
+        get => _cursorPosition;
+        set => SetProperty(ref _cursorPosition, value);
+    }
+
+    public bool IsEditing
+    {
+        get => _isEditing;
+        set => SetProperty(ref _isEditing, value);
+    }
+
     #endregion
 
     #region Commands
@@ -94,6 +122,9 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     public ICommand NegateCommand { get; }
     public ICommand ReciprocalCommand { get; }
     public ICommand PasteCommand { get; }
+    public ICommand MoveCursorLeftCommand { get; }
+    public ICommand MoveCursorRightCommand { get; }
+    public ICommand MoveCursorToPositionCommand { get; }
 
     #endregion
 
@@ -101,48 +132,129 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
 
     private void InputNumber(string input)
     {
-        if (DisplayText == "" || DisplayText == "Error")
+        // Allow function names (Sin, Cos, etc.) even when editing
+        bool isFunction = input.StartsWith("Sin") || input.StartsWith("Cos") || input.StartsWith("Tan") ||
+                         input.StartsWith("Asin") || input.StartsWith("Acos") || input.StartsWith("Atan") ||
+                         input.StartsWith("Sqrt") || input.StartsWith("Log") || input.StartsWith("Log10") ||
+                         input.StartsWith("Pow") || input == "(" || input == ")" || input == "E" || input == "Pi";
+        
+        if (_isEditing && !isFunction) return; // Disable number/operator input when editing, but allow functions
+        
+        if (DisplayText == "Error")
+        {
             DisplayText = input;
+            CursorPosition = input.Length;
+            return;
+        }
+
+        if (DisplayText == "")
+        {
+            DisplayText = input;
+            CursorPosition = input.Length;
+        }
         else
-            DisplayText += input;
+        {
+            int pos = Math.Clamp(CursorPosition, 0, DisplayText.Length);
+            DisplayText = DisplayText.Insert(pos, input);
+            CursorPosition = pos + input.Length;
+        }
     }
 
     private void SetOperator(string op)
     {
+        // Allow operators when editing for expression typing
+        // if (_isEditing) return; // Disable button input when editing
+        
         string nCalcOp = op switch
         {
             "×" => "*",
             "÷" => "/",
-            "^" => "^",
             _ => op
         };
 
-        if ((DisplayText == "" || DisplayText == "Error") && nCalcOp == "-")
+        if (DisplayText == "Error")
+        {
+            DisplayText = nCalcOp;
+            CursorPosition = nCalcOp.Length;
+            return;
+        }
+
+        if ((DisplayText == "") && nCalcOp == "-")
+        {
             DisplayText = "-";
+            CursorPosition = 1;
+        }
         else
-            DisplayText += nCalcOp;
+        {
+            int pos = Math.Clamp(CursorPosition, 0, DisplayText.Length);
+            DisplayText = DisplayText.Insert(pos, nCalcOp);
+            CursorPosition = pos + nCalcOp.Length;
+        }
     }
 
     private void InputDecimal()
     {
+        if (_isEditing) return; // Disable button input when editing
+        
+        if (DisplayText == "Error")
+        {
+            DisplayText = ".";
+            CursorPosition = 1;
+            return;
+        }
+
+        if (DisplayText == "")
+        {
+            DisplayText = ".";
+            CursorPosition = 1;
+            return;
+        }
+
+        int pos = Math.Clamp(CursorPosition, 0, DisplayText.Length);
+        
+        // Check if the current number segment already has a decimal
         var parts = DisplayText.Split(new[] { '+', '-', '*', '/', '(', ')', ',' });
-        var lastPart = parts.LastOrDefault();
-        if (lastPart != null && !lastPart.Contains("."))
-            DisplayText += ".";
+        var currentSegment = DisplayText.Substring(0, pos);
+        var lastSegmentIndex = currentSegment.LastIndexOfAny(new[] { '+', '-', '*', '/', '(', ')', ',' });
+        var segmentToCheck = lastSegmentIndex < 0 ? currentSegment : currentSegment.Substring(lastSegmentIndex + 1);
+        
+        if (!segmentToCheck.Contains("."))
+        {
+            DisplayText = DisplayText.Insert(pos, ".");
+            CursorPosition = pos + 1;
+        }
     }
 
     private void Backspace()
     {
+        if (_isEditing) return; // Disable button input when editing
+        
         if (DisplayText == "Error")
         {
             DisplayText = "";
+            CursorPosition = 0;
             return;
         }
 
         if (DisplayText.Length > 0)
         {
-            DisplayText = DisplayText.Substring(0, DisplayText.Length - 1);
-            if (string.IsNullOrEmpty(DisplayText)) DisplayText = "";
+            int pos = Math.Clamp(CursorPosition, 0, DisplayText.Length);
+            if (pos > 0)
+            {
+                DisplayText = DisplayText.Remove(pos - 1, 1);
+                CursorPosition = pos - 1;
+            }
+            else
+            {
+                DisplayText = DisplayText.Substring(0, DisplayText.Length - 1);
+                CursorPosition = DisplayText.Length;
+            }
+            
+            if (string.IsNullOrEmpty(DisplayText))
+            {
+                DisplayText = "";
+                CursorPosition = 0;
+            }
         }
     }
 
@@ -150,10 +262,12 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     {
         DisplayText = "";
         OperationText = "";
+        CursorPosition = 0;
     }
 
     private void Negate()
     {
+        if (_isEditing) return; // Disable button input when editing
         if (DisplayText == "" || DisplayText == "Error") return;
 
         // Wrap the existing expression in a negative bracket
@@ -165,12 +279,14 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
 
     private void Reciprocal()
     {
+        if (_isEditing) return; // Disable button input when editing
         if (DisplayText == "" || DisplayText == "Error") return;
         DisplayText = $"1/({DisplayText})";
     }
 
     private void InputComma()
     {
+        if (_isEditing) return; // Disable button input when editing
         if (DisplayText != "" && !DisplayText.EndsWith(","))
             DisplayText += ",";
     }
@@ -182,21 +298,53 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
 
     private void Paste(string text)
     {
+        if (_isEditing) return; // Disable button input when editing
         if (string.IsNullOrWhiteSpace(text)) return;
         
+        if (DisplayText == "Error")
+        {
+            DisplayText = text;
+            CursorPosition = text.Length;
+            return;
+        }
+
         // Try to parse as a number first
         if (double.TryParse(text, out _))
         {
-            DisplayText = text;
+            int pos = Math.Clamp(CursorPosition, 0, DisplayText.Length);
+            DisplayText = DisplayText.Insert(pos, text);
+            CursorPosition = pos + text.Length;
         }
         else
         {
             // If not a single number, append the text (allows pasting expressions)
-            if (DisplayText == "" || DisplayText == "Error")
+            if (DisplayText == "")
+            {
                 DisplayText = text;
+                CursorPosition = text.Length;
+            }
             else
-                DisplayText += text;
+            {
+                int pos = Math.Clamp(CursorPosition, 0, DisplayText.Length);
+                DisplayText = DisplayText.Insert(pos, text);
+                CursorPosition = pos + text.Length;
+            }
         }
+    }
+
+    private void MoveCursorLeft()
+    {
+        CursorPosition = Math.Max(0, CursorPosition - 1);
+    }
+
+    private void MoveCursorRight()
+    {
+        CursorPosition = Math.Min(DisplayText?.Length ?? 0, CursorPosition + 1);
+    }
+
+    private void MoveCursorToPosition(int position)
+    {
+        CursorPosition = Math.Clamp(position, 0, DisplayText?.Length ?? 0);
     }
 
     private void Calculate()

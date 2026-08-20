@@ -243,27 +243,20 @@
             </Grid.RowDefinitions>
 
             <!--  Calculator's Display which is a Part of a Computers Display ( Displayception )  -->
-            <Viewbox
+            <TextBox
+                x:Name="DisplayTextBox"
                 Grid.Row="1"
-                MaxHeight="120"
-                Margin="0,-10,0,0"
-                HorizontalAlignment="Right">
-                <StackPanel
-                    x:Name="DisplayStack"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom">
-                    <TextBlock
-                        x:Name="DisplayTextBlock"
-                        Margin="12,7,5,10"
-                        HorizontalAlignment="Right"
-                        FontSize="28"
-                        FontWeight="SemiBold"
-                        IsTextSelectionEnabled="True"
-                        Text="{x:Bind ViewModel.DisplayText, Mode=OneWay}"
-                        TextAlignment="Right" />
-                </StackPanel>
-            </Viewbox>
-            <Grid Grid.Row="2" Margin="0">
+                Margin="12,7,12,10"
+                HorizontalAlignment="Stretch"
+                Background="Transparent"
+                BorderThickness="0"
+                FontSize="48"
+                FontWeight="SemiBold"
+                GotFocus="DisplayTextBox_GotFocus"
+                LostFocus="DisplayTextBox_LostFocus"
+                Text="{x:Bind ViewModel.DisplayText, Mode=TwoWay}"
+                TextAlignment="Right" />
+            <Grid x:Name="ButtonsGrid" Grid.Row="2" Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -300,20 +293,20 @@
                     Content="π"
                     Style="{StaticResource CalculatorButtonStyle}" />
                 <Button
-                    x:Name="BtnPow"
+                    x:Name="BtnFactorial"
                     Grid.Row="0"
                     Grid.Column="2"
                     Command="{x:Bind ViewModel.InputNumberCommand}"
-                    CommandParameter="^"
-                    Content="^"
+                    CommandParameter="!"
+                    Content="!"
                     Style="{StaticResource CalculatorButtonStyle}" />
                 <Button
-                    x:Name="BtnFactorial"
+                    x:Name="BtnExp"
                     Grid.Row="0"
                     Grid.Column="3"
                     Command="{x:Bind ViewModel.InputNumberCommand}"
-                    CommandParameter="!"
-                    Content="!"
+                    CommandParameter="E"
+                    Content="e"
                     Style="{StaticResource CalculatorButtonStyle}" />
 
                 <!--  Advanced Row 2  -->
@@ -358,28 +351,28 @@
                     IsChecked="{x:Bind ViewModel.IsInverse, Mode=TwoWay}"
                     Style="{StaticResource CalculatorToggleButtonStyle}" />
                 <Button
-                    x:Name="BtnE"
+                    x:Name="BtnLn"
                     Grid.Row="2"
                     Grid.Column="1"
                     Command="{x:Bind ViewModel.InputNumberCommand}"
-                    CommandParameter="E"
-                    Content="e"
-                    Style="{StaticResource CalculatorButtonStyle}" />
-                <Button
-                    x:Name="BtnLn"
-                    Grid.Row="2"
-                    Grid.Column="2"
-                    Command="{x:Bind ViewModel.InputNumberCommand}"
-                    CommandParameter="TrigLog("
+                    CommandParameter="Log("
                     Content="ln"
                     Style="{StaticResource CalculatorButtonStyle}" />
                 <Button
                     x:Name="BtnLog"
                     Grid.Row="2"
+                    Grid.Column="2"
+                    Command="{x:Bind ViewModel.InputNumberCommand}"
+                    CommandParameter="Log10("
+                    Content="log"
+                    Style="{StaticResource CalculatorButtonStyle}" />
+                <Button
+                    x:Name="BtnPow"
+                    Grid.Row="2"
                     Grid.Column="3"
                     Command="{x:Bind ViewModel.InputNumberCommand}"
-                    CommandParameter="TrigLog10("
-                    Content="log"
+                    CommandParameter="Pow("
+                    Content="Pow("
                     Style="{StaticResource CalculatorButtonStyle}" />
 
                 <!--  Row 1  -->
@@ -560,18 +553,18 @@
                     Content="0"
                     Style="{StaticResource NumberButtonStyle}" />
                 <Button
-                    x:Name="BtnComma"
-                    Grid.Row="8"
-                    Grid.Column="1"
-                    Command="{x:Bind ViewModel.InputCommaCommand}"
-                    Content=","
-                    Style="{StaticResource NumberButtonStyle}" />
-                <Button
                     x:Name="BtnDecimal"
                     Grid.Row="8"
-                    Grid.Column="2"
+                    Grid.Column="1"
                     Command="{x:Bind ViewModel.InputDecimalCommand}"
                     Content="."
+                    Style="{StaticResource NumberButtonStyle}" />
+                <Button
+                    x:Name="BtnComma"
+                    Grid.Row="8"
+                    Grid.Column="2"
+                    Command="{x:Bind ViewModel.InputCommaCommand}"
+                    Content=","
                     Style="{StaticResource NumberButtonStyle}" />
                 <Button
                     x:Name="BtnEqual"

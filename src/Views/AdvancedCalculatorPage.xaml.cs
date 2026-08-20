@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Lamina.ViewModels;
@@ -6,6 +7,7 @@ using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Core;
@@ -22,6 +24,57 @@ public sealed partial class AdvancedCalculatorPage : Page
         ViewModel = App.GetService<AdvancedCalculatorViewModel>();
         InitializeComponent();
         this.Loaded += (s, e) => this.Focus(FocusState.Programmatic);
+        ViewModel.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == "IsEditing")
+            {
+                SetButtonsEnabled(!ViewModel.IsEditing);
+            }
+        };
+    }
+
+    private void SetButtonsEnabled(bool enabled)
+    {
+        // Find all buttons in the buttons grid and enable/disable them
+        var allButtons = new List<Button>();
+        
+        void FindButtons(DependencyObject parent)
+        {
+            if (parent is Button button)
+            {
+                allButtons.Add(button);
+            }
+            
+            int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < childrenCount; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                FindButtons(child);
+            }
+        }
+        
+        if (ButtonsGrid != null)
+        {
+            FindButtons(ButtonsGrid);
+        }
+        
+        foreach (var button in allButtons)
+        {
+            button.IsEnabled = enabled;
+        }
+        
+        // Always keep the textbox enabled
+        DisplayTextBox.IsEnabled = true;
+    }
+
+    private void DisplayTextBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        ViewModel.IsEditing = true;
+    }
+
+    private void DisplayTextBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        ViewModel.IsEditing = false;
     }
 
     private async void AnimateClick(Button button)
@@ -39,6 +92,37 @@ public sealed partial class AdvancedCalculatorPage : Page
 
         bool handled = true;
         Button targetButton = null;
+
+        // If editing mode, only handle Enter and Escape, let TextBox handle other keys for typing
+        if (ViewModel.IsEditing)
+        {
+            switch (e.Key)
+            {
+                case VirtualKey.Enter:
+                    ViewModel.CalculateCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                case VirtualKey.Escape:
+                    ViewModel.ClearAllCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                default:
+                    // Don't handle - let TextBox process the key for normal typing
+                    return;
+            }
+        }
+
+        // Arrow keys for cursor movement
+        if (e.Key == VirtualKey.Left)
+        {
+            ViewModel.MoveCursorLeftCommand.Execute(null);
+            return;
+        }
+        else if (e.Key == VirtualKey.Right)
+        {
+            ViewModel.MoveCursorRightCommand.Execute(null);
+            return;
+        }
 
         // 1. Numbers
         if (e.Key >= VirtualKey.Number0 && e.Key <= VirtualKey.Number9 && !shift)
@@ -67,8 +151,7 @@ public sealed partial class AdvancedCalculatorPage : Page
                     targetButton = BtnRightBracket;
                     break;
                 case VirtualKey.Number6 when shift:
-                    ViewModel.SetOperatorCommand.Execute("^");
-                    targetButton = BtnPow;
+                    ViewModel.InputNumberCommand.Execute("Pow(");
                     break;
 
                 case VirtualKey.Add:
@@ -109,8 +192,7 @@ public sealed partial class AdvancedCalculatorPage : Page
                 case (VirtualKey)190:
                     ViewModel.InputDecimalCommand.Execute(null);
                     targetButton = BtnDecimal;
-                    break;
-                case VirtualKey.Comma:
+                    break;                
                 case (VirtualKey)188:
                     ViewModel.InputCommaCommand.Execute(null);
                     targetButton = BtnComma;
@@ -155,9 +237,9 @@ public sealed partial class AdvancedCalculatorPage : Page
 
     private async void CopyButton_Click(object sender, RoutedEventArgs e)
     {
-        if (string.IsNullOrEmpty(DisplayTextBlock.Text)) return;
+        if (string.IsNullOrEmpty(DisplayTextBox.Text)) return;
         var dp = new DataPackage();
-        dp.SetText(DisplayTextBlock.Text);
+        dp.SetText(DisplayTextBox.Text);
         Clipboard.SetContent(dp);
         CopyNotification.IsOpen = true;
         await Task.Delay(2000);
