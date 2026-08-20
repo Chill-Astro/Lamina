@@ -10,14 +10,14 @@
 
     <!--  History of your Math not the Boring one from School  -->
 
-    <Grid>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!--  Title and Clear Button  -->
-        <Grid Grid.Row="0" Margin="20">
+        <Grid Grid.Row="0" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -39,7 +39,7 @@
         </Grid>
 
         <!--  History List  -->
-        <Grid Grid.Row="1" Margin="20">
+        <Grid Grid.Row="1">
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <StackPanel>
                     <!--  The No History Text from FOSS Root Checker  -->
@@ -50,14 +50,37 @@
                         FontSize="12"
                         Text="Aww no History? Let's Make some! :)"
                         Visibility="Collapsed" />
-                    <ListView x:Name="HistoryList" MaxHeight="400">
+                    <ListView x:Name="HistoryList" MaxHeight="500" SelectionMode="None">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock
-                                    Margin="5"
-                                    FontSize="16"
-                                    Text="{Binding}"
-                                    TextWrapping="Wrap" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        FontSize="16"
+                                        Text="{Binding}"
+                                        TextWrapping="Wrap" />
+                                    <Button
+                                        x:Name="UseButton"
+                                        Grid.Column="1"
+                                        Margin="5"
+                                        Padding="12,6"
+                                        Click="UseHistoryButton_Click"
+                                        Tag="{Binding}"
+                                        Content="Use"
+                                        FontSize="12"
+                                        Style="{StaticResource AccentButtonStyle}"
+                                        Visibility="Collapsed" />
+                                    <Border
+                                        Grid.ColumnSpan="2"
+                                        Background="Transparent"
+                                        PointerEntered="HistoryItem_PointerEntered"
+                                        PointerExited="HistoryItem_PointerExited" />
+                                </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>

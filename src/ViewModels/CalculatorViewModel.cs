@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Windows.Storage;
 
 namespace Lamina.ViewModels;
 
@@ -27,8 +28,50 @@ public partial class CalculatorViewModel : ObservableRecipient
 
     public ObservableCollection<string> CalculationHistory { get; } = new();
 
+    private const string HistoryFileName = "calculator_history.json";
+
     public CalculatorViewModel()
     {
+        LoadHistoryAsync();
+    }
+
+    private async void LoadHistoryAsync()
+    {
+        try
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var historyFile = await localFolder.TryGetItemAsync(HistoryFileName) as StorageFile;
+            
+            if (historyFile != null)
+            {
+                var historyText = await FileIO.ReadTextAsync(historyFile);
+                var historyLines = historyText.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                
+                foreach (var line in historyLines)
+                {
+                    CalculationHistory.Add(line);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading history: {ex.Message}");
+        }
+    }
+
+    private async void SaveHistoryAsync()
+    {
+        try
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var historyFile = await localFolder.CreateFileAsync(HistoryFileName, CreationCollisionOption.ReplaceExisting);
+            var historyText = string.Join("\n", CalculationHistory);
+            await FileIO.WriteTextAsync(historyFile, historyText);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error saving history: {ex.Message}");
+        }
     }
 
     [RelayCommand]
@@ -110,6 +153,7 @@ public partial class CalculatorViewModel : ObservableRecipient
             OperationText = $"{_previousNumber} {_currentOperator} {_secondNumber} =";
             DisplayText = result.ToString("G15");
             CalculationHistory.Add($"{OperationText} {DisplayText}");
+            SaveHistoryAsync();
             _currentNumber = result;
             _lastOperationWasEquals = true;
             _isNewNumberInput = true;
@@ -190,6 +234,8 @@ public partial class CalculatorViewModel : ObservableRecipient
             double result = value * value;
             OperationText = $"sqr({value})"; 
             DisplayText = result.ToString("G15");
+            CalculationHistory.Add($"{OperationText} = {DisplayText}");
+            SaveHistoryAsync();
             _currentNumber = result;
             _isNewNumberInput = true;
         }
@@ -210,6 +256,8 @@ public partial class CalculatorViewModel : ObservableRecipient
             double result = Math.Sqrt(value);
             OperationText = $"sqrt({value})"; 
             DisplayText = result.ToString("G15");
+            CalculationHistory.Add($"{OperationText} = {DisplayText}");
+            SaveHistoryAsync();
             _currentNumber = result;
             _isNewNumberInput = true;
         }
@@ -224,6 +272,8 @@ public partial class CalculatorViewModel : ObservableRecipient
             double result = Math.Pow(value, 1.0 / 3.0);
             OperationText = $"cbrt({value})"; 
             DisplayText = result.ToString("G15");
+            CalculationHistory.Add($"{OperationText} = {DisplayText}");
+            SaveHistoryAsync();
             _currentNumber = result;
             _isNewNumberInput = true;
         }

@@ -11,6 +11,8 @@ using Microsoft.UI.Xaml.Media;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Core;
+using Microsoft.UI.Xaml.Navigation;
+using System.Windows.Input;
 
 namespace Lamina.Views;
 
@@ -24,13 +26,42 @@ public sealed partial class AdvancedCalculatorPage : Page
         ViewModel = App.GetService<AdvancedCalculatorViewModel>();
         InitializeComponent();
         this.Loaded += (s, e) => this.Focus(FocusState.Programmatic);
+        this.SizeChanged += AdvancedCalculatorPage_SizeChanged;
         ViewModel.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == "IsEditing")
             {
                 SetButtonsEnabled(!ViewModel.IsEditing);
             }
+            if (e.PropertyName == "CalculationHistory")
+            {
+                UpdateHistorySidebar();
+            }
         };
+        UpdateHistorySidebar();
+    }
+
+    private void AdvancedCalculatorPage_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        const double WideWindowThreshold = 1200;
+        
+        if (e.NewSize.Width >= WideWindowThreshold)
+        {
+            HistorySidebar.Visibility = Visibility.Visible;
+            HistorySidebarColumn.Width = new GridLength(300);
+            HistoryButton.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            HistorySidebar.Visibility = Visibility.Collapsed;
+            HistorySidebarColumn.Width = new GridLength(0);
+            HistoryButton.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void UpdateHistorySidebar()
+    {
+        HistorySidebarList.ItemsSource = ViewModel.CalculationHistory;
     }
 
     private void SetButtonsEnabled(bool enabled)
@@ -255,15 +286,21 @@ public sealed partial class AdvancedCalculatorPage : Page
         {
             var historyPage = new HistoryPage();
             historyPage.SetHistory(ViewModel.CalculationHistory.ToList());
-            historyPage.HorizontalAlignment = HorizontalAlignment.Center;
-            historyPage.VerticalAlignment = VerticalAlignment.Center;
+            historyPage.HorizontalAlignment = HorizontalAlignment.Stretch;
+            historyPage.VerticalAlignment = VerticalAlignment.Stretch;
+            historyPage.HistoryItemSelected += (result) =>
+            {
+                ViewModel.DisplayText = result;
+                ViewModel.CursorPosition = result.Length;
+            };
             var dialog = new ContentDialog
             {
                 Content = historyPage,
                 CloseButtonText = "Close",
                 XamlRoot = this.XamlRoot,
                 RequestedTheme = this.RequestedTheme,
-                MaxWidth = 400,
+                MaxWidth = 600,
+                Padding = new Thickness(20),
             };
 
             await dialog.ShowAsync();
@@ -275,4 +312,24 @@ public sealed partial class AdvancedCalculatorPage : Page
     }
 
     private void HistoryButton_Click(object sender, RoutedEventArgs e) => OpenHistoryDialog();
+
+    private void ClearHistoryButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.CalculationHistory.Clear();
+        UpdateHistorySidebar();
+    }
+
+    private void UseHistorySidebarButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.Tag is string historyItem)
+        {
+            string[] parts = historyItem.Split(new[] { " = " }, StringSplitOptions.None);
+            if (parts.Length >= 2)
+            {
+                string result = parts[1];
+                ViewModel.DisplayText = result;
+                ViewModel.CursorPosition = result.Length;
+            }
+        }
+    }
 }

@@ -160,6 +160,7 @@
     <Grid>
         <!--  History Button  -->
         <Button
+            x:Name="HistoryButton"
             Width="35"
             Height="35"
             Margin="0,-52,1,0"
@@ -241,11 +242,16 @@
                 <RowDefinition Height="100" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="0" x:Name="HistorySidebarColumn" />
+            </Grid.ColumnDefinitions>
 
             <!--  Calculator's Display which is a Part of a Computers Display ( Displayception )  -->
             <TextBox
                 x:Name="DisplayTextBox"
                 Grid.Row="1"
+                Grid.Column="0"
                 Margin="12,7,12,10"
                 HorizontalAlignment="Stretch"
                 Background="Transparent"
@@ -256,7 +262,7 @@
                 LostFocus="DisplayTextBox_LostFocus"
                 Text="{x:Bind ViewModel.DisplayText, Mode=TwoWay}"
                 TextAlignment="Right" />
-            <Grid x:Name="ButtonsGrid" Grid.Row="2" Margin="0">
+            <Grid x:Name="ButtonsGrid" Grid.Row="2" Grid.Column="0" Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -575,6 +581,79 @@
                     FontFamily="Segoe Fluent Icons"
                     Style="{StaticResource AccentButtonStyle}" />
             </Grid>
+
+            <!--  History Sidebar  -->
+            <Border
+                x:Name="HistorySidebar"
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="1"
+                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1,0,0,0"
+                CornerRadius="8,0,0,8"
+                Padding="10"
+                Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Header  -->
+                    <Grid Grid.Row="0" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Text="History" />
+                        <Button
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="ClearHistoryButton_Click"
+                            Content="&#xe74d;"
+                            FontFamily="Segoe Fluent Icons"
+                            Style="{StaticResource AccentButtonStyle}" />
+                    </Grid>
+
+                    <!--  History List  -->
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl x:Name="HistorySidebarList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid MinHeight="40">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            FontSize="14"
+                                            Text="{Binding}"
+                                            TextWrapping="Wrap" />
+                                        <Button
+                                            Grid.Column="1"
+                                            Margin="5"
+                                            Padding="8,4"
+                                            Click="UseHistorySidebarButton_Click"
+                                            Tag="{Binding}"
+                                            Content="Use"
+                                            FontSize="11"
+                                            Style="{StaticResource AccentButtonStyle}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
             <TeachingTip
                 x:Name="CopyNotification"
                 Title="Copied! ♪(´▽｀)"

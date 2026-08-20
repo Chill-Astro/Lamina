@@ -7,6 +7,8 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NCalc;
+using Windows.Storage;
+using System.Text.RegularExpressions;
 
 namespace Lamina.ViewModels;
 
@@ -20,6 +22,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     private bool _isEditing = false;
 
     public ObservableCollection<string> CalculationHistory { get; } = new();
+    private const string HistoryFileName = "advanced_calculator_history.json";
 
     public AdvancedCalculatorViewModel()
     {
@@ -37,6 +40,46 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         MoveCursorLeftCommand = new RelayCommand(MoveCursorLeft);
         MoveCursorRightCommand = new RelayCommand(MoveCursorRight);
         MoveCursorToPositionCommand = new RelayCommand<int>(MoveCursorToPosition);
+        LoadHistoryAsync();
+    }
+
+    private async void LoadHistoryAsync()
+    {
+        try
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var historyFile = await localFolder.TryGetItemAsync(HistoryFileName) as StorageFile;
+            
+            if (historyFile != null)
+            {
+                var historyText = await FileIO.ReadTextAsync(historyFile);
+                var historyLines = historyText.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                
+                foreach (var line in historyLines)
+                {
+                    CalculationHistory.Add(line);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading history: {ex.Message}");
+        }
+    }
+
+    private async void SaveHistoryAsync()
+    {
+        try
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var historyFile = await localFolder.CreateFileAsync(HistoryFileName, CreationCollisionOption.ReplaceExisting);
+            var historyText = string.Join("\n", CalculationHistory);
+            await FileIO.WriteTextAsync(historyFile, historyText);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error saving history: {ex.Message}");
+        }
     }
 
     #region Properties
@@ -509,6 +552,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
                         OperationText = DisplayText + " =";
                         DisplayText = numericResult.ToString("G15");
                         CalculationHistory.Add($"{OperationText} {DisplayText}");
+                        SaveHistoryAsync();
                     }
                 }
                 else
