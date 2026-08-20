@@ -8,9 +8,7 @@
   
 Lamina ✦ is a `WinUI 3 calculator` that is not only includes a Regular Calculator but also something called `"Scripties"`. She supports **Mensuration, Finance, Currency Conversion, Unit Conversions And More!**, making her a Very Extendable Option.
 
-Lamina ✦ `v11.28000.17.0 BETA` has the NEW ADVANCED CALCULATOR!
-
-To get User-Made Modules and Details on `Dynamo Scripties Loader (DSL)`, go to [Lamina ✦ Modules Repo](https://github.com/Chill-Astro/Lamina-Modules-Repo).
+To get User-Made Modules, go to [Lamina ✦ Modules Repo](https://github.com/Chill-Astro/Lamina-Modules-Repo).
   
 **Target OS:** **Windows 11** ONLY.  |  **Latest Stable Version:** **v11.28000.16.0**
 
@@ -34,81 +32,50 @@ To get User-Made Modules and Details on `Dynamo Scripties Loader (DSL)`, go to [
 
 ## What are Scripties?
 
-Scripties are High Performance GUI equivalents of Console Scripts, that are Reliable and Easy to Make.
+Scripties are High Performance GUI equivalents of Console Scripts, that are Reliable and Easy to Make. 
+
+Categories :
+
+- Built-In Scripties - Made in XAML & C# and Compiled. ( Static )
+- User Made Scripties - Made in JSON and loaded by my Interpereter `Dynamo`. ( Dynamic )
 
 ---
 
-## A Halt on Development from v11.28000.17.0 ONWARDS :
+## A Temporary Halt on Development :
 
 - I wouldn't provide updates for the next couple of months.
-- Issues will be addressed late.
-- Pull Requests may be merged late.
+- Issues will be addressed  and Pull Requests may be merged a bit late.
 - All of this is because WinUI 3 is annoying and in return, no appreciation.
 - I am not Maintaining this Project for a Wall, I am maintaining this as an example of What UI can be.
-- She is quite Stable from v13, v14 amd v15 onwards with many of her Bugs and Trashy UI fixed.
-- I hope that you have a good UX in v16! 👍
+- v11.28000.17.0's Scientific Calc is VERY Confusing to make and will take Time & Experience ( in Math ).
+- I will be making some of my own modules.
  
----
-
-## What's Cooking Inside?
-
-Advanced Calculator Preview ( With the Now Released DSL )
-
-<kbd>
-  <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c87315c8-55e3-48cb-ba99-824119b4a71e" />
-</Kbd>
-
----
-
-## WHAT IS DYNAMO???????
-
-Dynamo is a Dynamic Scriptie Loader. Think of MODS in a Game, or Magisk Modules.
-
-Didn't get it? Alright, Think of a Digital Version of a Programmable Calculator.
-
-Yes that's right! An Importer of Math Scripts. Now you can Program her without Proper Coding Skills!
-
-Basically you can give an Expression for NCalc and she will parse it for you.
-
-Check for More Details [here!](https://github.com/Chill-Astro/Lamina-Modules-Repo)
-
-For Maximum Reach, ensure to Fork the Above Mentioned Repo and I will add you to my Modules!
-
----
-
-## Steps to Use Dynamo Scriptie Loader:
-
-- Go to [Lamina ✦ Modules Repo](https://github.com/Chill-Astro/Lamina-Modules-Repo).
-- Download your Desired Mod, a `.lamina` File.
-- Go to Menu > Add and Add the File from the Popup!
-
----
-
-## Advantages of Dynamo :
-
-- Very Easy to Contribute Math for Newbies.
-- No Coding Skills required.
-- Notepad is Enough to Contribute.
-- Since NCalc is NCalc and not a Compiler, the Risk of Viruses is VERY LOW.
-- NClac understands Math only, so you can't do `Remove-Item -Path C:\ -Recurse -Force`, so NOICE.
-
 ---
 
 ## Features :
 
 - Simple and Clean GUI. ✅
 - Dozens of calculation options. ✅
-- Custom Scriptie Loader for User Made Logic! ✅
+- Programmable using JSON-based Logic. ✅
 - Fast and Error-Proof Calculations. ✅
 - High Precision for decimals. ✅
 - Modern UI with Fluid Animations and Transitions. ✅
 - History Support for the Base Calculator UI. ✅
 - Theme switching built in. ✅
 - Backdrop switching betwwen Mica Alt, Mica and Acrylic! ✅
-- Eggcelent Looking Splash Screen that hasn't been seen before. ✅
-- Splash Screen can be toggled OFF if you are a Serious Mathematician or have 0 Attention Span. ✅
+- Eggcelent Looking Splash Screen that can be toggled OFF. ✅
 - Available in both Msix & Installer Variants. ✅
 
+---
+
+## Anti-Features :
+
+- Slow Updates ❌
+- Use of AI Assistance as I am learning UI and WinUI 3 with AI. ❌
+- Lack of Scientific Calculator ( Will be Fixed ) ❌
+- Use of `Alex Brush` in Branding which may look like Alien Language for certain People. ❌
+- BUGS may Slip in because AI is Stupid, and without a Manual Audit, it's basically `AI SLOP`. ❌
+    
 ---
 
 ## Install Lamina ✦ from Winget :
@@ -131,8 +98,24 @@ v`11`.`26100`.`16`.`0`
 
 - `11` -> Target OS ( She IS for Windows 11 )
 - `28000` -> Release SDK Version ( Currently She uses 28000.xxxx Versions of Windows 11 SDK )
-- `16` -> Release Index ( Here 15 stands for the 16th Release Of Course! )
+- `16` -> Release Index ( Here 16 stands for the 16th Release Of Course! )
 - `0` -> Filler Number ( Package.appxmanifest doesn't allow me to edit this Number so it's there for NOTHING 💀 )
+
+---
+
+## More Screenshots :
+
+<details><summary><b>View Screenshots</b></summary>
+
+<kbd>
+<img alt="image" src="https://github.com/user-attachments/assets/93ceb201-e3ff-4bd3-adae-1415efa5b0ae" />
+</kbd>
+
+<kbd>
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/dadf0bd6-fefe-41c4-a632-004c7c0542d0" />
+</kbd>
+
+</details>
 
 ---
 
@@ -157,14 +140,54 @@ v`11`.`26100`.`16`.`0`
 
 ---
 
-## Anti-Features :
+## DETAILS ON DYNAMO :
 
-- Slow Updates ❌
-- Use of AI Assistance as I am learning UI and WinUI 3 with AI. ❌
-- Lack of Scientific Calculator ❌
-- Use of `Alex Brush` in Branding which will look like Alien Language for certain People. ❌
-- BUGS may Slip in because AI is Stupid, and without a Manual Audit, it's basically `AI SLOP`. ❌
-    
+Dynamo Scriptie Loader (DSL) is an `Interpreter` for `JSON` Code for creating a Dynamic UI for User-Made Math. 
+
+Features :
+
+- Dynamically Generates a UI with the Required Fields and Formulae Entered by the User.
+- ONE PAGE, MULTIPLE POSSIBILITIES. Yes, `DyNamoPage.xaml` is the Backbone of Any Scriptie Mod.
+- Integrated Manager `DyNamoManagerPage.xaml` that Interprets the Mods and feeds this data into `DyNamoPage.xaml` to Load the UI.
+- <details> <summary><b>Very Clean & Simple Structure</b></summary>
+        
+        {
+          "Metadata": {
+            "Name": "", // This is What your Module Shows Up!
+            "Author": "", // Write your Username.
+            "Version": "", // This is the Version of your Scriptie.
+            "Description": "", // Details
+            "Repo": "" // Link ( If FOSS )
+          },
+          "UI": {
+            "Formula": "", // Example W = F.S cos (theta)
+            "Inputs": [
+              { "Header": "Input Label", "Placeholder": "0.0", "Key": "var_name" } // Add as many as you like.
+            ]
+          },
+          "Logic": {
+            "Output": "NCalc math string using [var_name]", // Your Output. Example : "`Work Done = ` + F*S*Cos(Theta)"
+            "Error": "Message if math fails" // Your Error.
+          }
+        }
+  
+</details> 
+      
+- Thus, a `Massive Time Saver` and `Low Barrier to Entry` as one can make modules in Notepad.
+- Since NCalc is NCalc and not a Compiler, the Risk of Malicious Mods is VERY LOW.
+
+Steps to Use Dynamo Scriptie Loader:
+
+- Go to [Lamina ✦ Modules Repo](https://github.com/Chill-Astro/Lamina-Modules-Repo).
+- Download your Desired Mod, a `.lamina` File.
+- Go to Menu > Press `+ Add` and Add the File from the Popup!
+
+Contributing :
+
+- Fork [Lamina ✦ Modules Template](https://github.com/Chill-Astro/Lamina-Modules-Template).
+- Sample Code is Given. Modify as you Need.
+- I will add you to the Lamina ✦ Modules Repo
+
 ---
 
 ## TRAILER on @chill-astro-sfs :
@@ -178,30 +201,6 @@ v`11`.`26100`.`16`.`0`
   </a>
 </kbd>
 </div>
-
----
-
-## More Screenshots :
-
-<kbd>
-<img alt="image" src="https://github.com/user-attachments/assets/93ceb201-e3ff-4bd3-adae-1415efa5b0ae" />
-</kbd>
-
-<kbd>
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/dadf0bd6-fefe-41c4-a632-004c7c0542d0" />
-</kbd>
-
----
-
-## Video Previews :
-
-- New Onboarding Experience and Reveamped Settings Menu!!!!
-
-https://github.com/user-attachments/assets/1a737f20-3497-4105-91b6-d23a1321b3ce
-
-- BRAND NEW REVAMPED SCRIPTIES!!!!!
-
-https://github.com/user-attachments/assets/69bcd36f-7746-40ea-ae45-64da65af73a8
 
 ---
 
@@ -257,11 +256,14 @@ Since Lamina ✦ is Personified as `"She"` ( Because Computers are She ) and has
 
 so here's her Fictional Human Form! ヾ(^▽^*)))
 
+<details><summary><b>View Art</b></summary>
+
 <kbd>
-<img alt="Art" width="400" src="https://github.com/user-attachments/assets/724831c5-0497-4a53-8be8-53e6a974412f" />
+<img alt="Art" src="https://github.com/user-attachments/assets/724831c5-0497-4a53-8be8-53e6a974412f" />
 </kbd>
 
-<br> <br>
+</details>
+
 Well I am no Artist, but I hope that you Have a Nice Time with Her!
 
 ---
