@@ -295,7 +295,7 @@
                     Grid.Column="0"
                     Command="{x:Bind ViewModel.InputNumberCommand}"
                     CommandParameter="Sqrt("
-                    Content="√"
+                    Content="Sqrt("
                     Style="{StaticResource CalculatorButtonStyle}" />
                 <Button
                     x:Name="BtnPi"
@@ -318,7 +318,7 @@
                     Grid.Row="0"
                     Grid.Column="3"
                     Command="{x:Bind ViewModel.InputNumberCommand}"
-                    CommandParameter="E"
+                    CommandParameter="e"
                     Content="e"
                     Style="{StaticResource CalculatorButtonStyle}" />
 
@@ -368,8 +368,8 @@
                     Grid.Row="2"
                     Grid.Column="1"
                     Command="{x:Bind ViewModel.InputNumberCommand}"
-                    CommandParameter="Log("
-                    Content="ln"
+                    CommandParameter="Ln("
+                    Content="Ln("
                     Style="{StaticResource CalculatorButtonStyle}" />
                 <Button
                     x:Name="BtnLog"
@@ -377,7 +377,7 @@
                     Grid.Column="2"
                     Command="{x:Bind ViewModel.InputNumberCommand}"
                     CommandParameter="Log10("
-                    Content="log"
+                    Content="Log10("
                     Style="{StaticResource CalculatorButtonStyle}" />
                 <Button
                     x:Name="BtnPow"
@@ -408,8 +408,8 @@
                     Grid.Row="3"
                     Grid.Column="2"
                     Command="{x:Bind ViewModel.InputNumberCommand}"
-                    CommandParameter="³√("
-                    Content="³√"
+                    CommandParameter="Cbrt("
+                    Content="Cbrt("
                     Style="{StaticResource CalculatorButtonStyle}" />
                 <Button
                     x:Name="BtnBackspace"

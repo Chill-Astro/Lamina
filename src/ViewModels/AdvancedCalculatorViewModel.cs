@@ -149,9 +149,9 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     public string CosLabel => IsInverse ? "Acos(" : "Cos(";
     public string TanLabel => IsInverse ? "Atan(" : "Tan(";
 
-    public string SinDisplay => IsInverse ? "sin⁻¹" : "sin";
-    public string CosDisplay => IsInverse ? "cos⁻¹" : "cos";
-    public string TanDisplay => IsInverse ? "tan⁻¹" : "tan";
+    public string SinDisplay => IsInverse ? "Asin(" : "Sin(";
+    public string CosDisplay => IsInverse ? "Acos(" : "Cos(";
+    public string TanDisplay => IsInverse ? "Atan(" : "Tan(";
 
     public int CursorPosition
     {
@@ -201,7 +201,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
             input.StartsWith("Acos", StringComparison.OrdinalIgnoreCase) ||
             input.StartsWith("Atan", StringComparison.OrdinalIgnoreCase) ||
             input.StartsWith("Sqrt", StringComparison.OrdinalIgnoreCase) ||
-            input.StartsWith("Log", StringComparison.OrdinalIgnoreCase) ||
+            input.StartsWith("Ln", StringComparison.OrdinalIgnoreCase) ||
             input.StartsWith("Log10", StringComparison.OrdinalIgnoreCase) ||
             input.StartsWith("Pow", StringComparison.OrdinalIgnoreCase) ||
             input == "(" ||
@@ -689,9 +689,6 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
             @"\bLog\s*\(",
             "TrigLog(",
             RegexOptions.IgnoreCase);
-
-        // Cube root button/input.
-        result = result.Replace("³√(", "Cbrt(");
 
         // Convert simple factorial operands:
         // 5!      -> Fact(5)
