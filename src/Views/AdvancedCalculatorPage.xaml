@@ -303,7 +303,7 @@
                     Grid.Column="1"
                     Command="{x:Bind ViewModel.InputNumberCommand}"
                     CommandParameter="Pi"
-                    Content="π"
+                    Content="Pi"
                     Style="{StaticResource CalculatorButtonStyle}" />
                 <Button
                     x:Name="BtnFactorial"

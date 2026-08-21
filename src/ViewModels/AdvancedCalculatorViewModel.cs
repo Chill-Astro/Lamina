@@ -213,7 +213,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         if (_isEditing && !isFunction)
             return;
 
-        if (DisplayText == "Error" || DisplayText == "Division by zero")
+        if (DisplayText == "NCalc Error ❌" || DisplayText == "Div By Zero Not Defined ❌")
         {
             DisplayText = input;
             CursorPosition = input.Length;
@@ -241,7 +241,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
             _ => op
         };
 
-        if (DisplayText == "Error" || DisplayText == "Division by zero")
+        if (DisplayText == "NCalc Error ❌" || DisplayText == "Div By Zero Not Defined ❌")
         {
             DisplayText = nCalcOp;
             CursorPosition = nCalcOp.Length;
@@ -269,7 +269,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         if (_isEditing)
             return;
 
-        if (DisplayText == "Error" || DisplayText == "Division by zero")
+        if (DisplayText == "NCalc Error ❌" || DisplayText == "Div By Zero Not Defined ❌")
         {
             DisplayText = ".";
             CursorPosition = 1;
@@ -319,7 +319,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         if (_isEditing || string.IsNullOrWhiteSpace(text))
             return;
 
-        if (DisplayText == "Error" || DisplayText == "Division by zero")
+        if (DisplayText == "NCalc Error ❌" || DisplayText == "Div By Zero Not Defined ❌")
         {
             DisplayText = text;
             CursorPosition = text.Length;
@@ -344,7 +344,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         if (_isEditing)
             return;
 
-        if (DisplayText == "Error" || DisplayText == "Division by zero")
+        if (DisplayText == "NCalc Error ❌" || DisplayText == "Div By Zero Not Defined ❌")
         {
             DisplayText = "";
             CursorPosition = 0;
@@ -377,7 +377,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     {
         if (_isEditing ||
             string.IsNullOrEmpty(DisplayText) ||
-            DisplayText == "Error")
+            DisplayText == "NCalc Error ❌")
         {
             return;
         }
@@ -401,7 +401,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     {
         if (_isEditing ||
             string.IsNullOrEmpty(DisplayText) ||
-            DisplayText == "Error")
+            DisplayText == "NCalc Error ❌")
         {
             return;
         }
@@ -458,14 +458,6 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
             expression.Parameters["E"] = Math.E;
 
             bool isDeg = AngleModeText == "DEG";
-
-            /*
-             * NCalc 7.1 custom functions.
-             *
-             * IMPORTANT:
-             * args.Evaluate(0) is the correct API for evaluating
-             * the first argument.
-             */
 
             expression.Functions["TrigSin"] = args =>
             {
@@ -574,7 +566,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
 
             if (result == null)
             {
-                DisplayText = "Error";
+                DisplayText = "NCalc Error ❌";
                 return;
             }
 
@@ -583,7 +575,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
             if (double.IsNaN(numericResult) ||
                 double.IsInfinity(numericResult))
             {
-                DisplayText = "Error";
+                DisplayText = "NCalc Error ❌";
                 return;
             }
 
@@ -598,12 +590,12 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         }
         catch (DivideByZeroException)
         {
-            DisplayText = "Division by zero";
+            DisplayText = "Div By Zero Not Defined ❌";
             CursorPosition = DisplayText.Length;
         }
         catch (Exception ex)
         {
-            DisplayText = "Error";
+            DisplayText = "NCalc Error ❌";
             CursorPosition = DisplayText.Length;
 
             System.Diagnostics.Debug.WriteLine(
@@ -618,7 +610,6 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
             .Replace("÷", "/")
             .Trim();
 
-        // Constants.
         result = Regex.Replace(
             result,
             @"\bpi\b",
@@ -627,15 +618,12 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
 
         result = result.Replace("π", "[Pi]");
 
-        // Use word boundaries so scientific notation such as 1e3
-        // is not accidentally modified.
         result = Regex.Replace(
             result,
             @"(?<![0-9.])\be\b",
             "[E]",
             RegexOptions.IgnoreCase);
 
-        // Replace longer function names before shorter ones.
         result = Regex.Replace(
             result,
             @"\bLog10\s*\(",
@@ -690,12 +678,8 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
             "TrigLog(",
             RegexOptions.IgnoreCase);
 
-        // Convert simple factorial operands:
-        // 5!      -> Fact(5)
-        // (2+3)!  -> Fact((2+3))
         result = ReplaceFactorials(result);
 
-        // Auto-close missing parentheses.
         int openBrackets = result.Count(c => c == '(');
         int closeBrackets = result.Count(c => c == ')');
 

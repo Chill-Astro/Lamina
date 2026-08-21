@@ -243,7 +243,7 @@ public sealed partial class AdvancedCalculatorPage : Page
                     ViewModel.InputCommaCommand.Execute(null);
                     targetButton = BtnComma;
                     break;
-                case VirtualKey.H when ctrl:
+                case VirtualKey.H when shift:
                     OpenHistoryDialog();
                     break;
                 default:
