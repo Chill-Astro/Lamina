@@ -11,14 +11,6 @@
             VerticalAlignment="Top"
             Spacing="12">
 
-            <InfoBar
-                Title="Formula"
-                IsClosable="False"
-                IsIconVisible="True"
-                IsOpen="True"
-                Message="N₁₀ = Σ (dᵢ × bⁱ)&#10;Nᵦ = N₁₀ mod b"
-                Severity="Informational" />
-
             <TextBox
                 x:Name="Input"
                 Width="300"
