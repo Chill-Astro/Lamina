@@ -41,13 +41,23 @@ Categories :
 
 ---
 
+## Bro's Cooking 💀 :
+
+Here's the New Advanced Calculator made with NCalc with History, and Expression Editor.
+
+YOU CAN TYPE YOUR OWN MATH LET'S GOOOOOOOOOOOOOOOOOOOOOOOOOO!!!!!!!!!!!!!!!
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/29bb10aa-f519-45ff-90ab-be340d6d9e8f" />
+
+---
+
 ## A Temporary Halt on Development :
 
 - I wouldn't provide updates for the next couple of months.
 - Issues will be addressed  and Pull Requests may be merged a bit late.
 - All of this is because WinUI 3 is annoying and in return, no appreciation.
 - I am not Maintaining this Project for a Wall, I am maintaining this as an example of What UI can be.
-- v11.28000.17.0's Scientific Calc is VERY Confusing to make and will take Time & Experience ( in Math ).
+- v11.28000.17.0's Scientific Calc is VERY Confusing but it will ariive by September 5th.
 - I will be making some of my own modules.
  
 ---
