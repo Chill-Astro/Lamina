@@ -241,7 +241,7 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="0" x:Name="HistorySidebarColumn" />
+                <ColumnDefinition x:Name="HistorySidebarColumn" Width="0" />
             </Grid.ColumnDefinitions>
 
             <!--  Calculator's Display which is a Part of a Computers Display ( Displayception )  -->
@@ -271,7 +271,10 @@
                         TextAlignment="Right" />
                 </StackPanel>
             </Viewbox>
-            <Grid Grid.Row="2" Grid.Column="0" Margin="0">
+            <Grid
+                Grid.Row="2"
+                Grid.Column="0"
+                Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -495,41 +498,34 @@
                 Grid.Row="0"
                 Grid.RowSpan="3"
                 Grid.Column="1"
+                Margin="0,-52,0,0"
+                Padding="10"
                 Background="{ThemeResource LayerFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1,0,0,0"
                 CornerRadius="8,0,0,8"
-                Padding="10"
                 Visibility="Collapsed">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <!--  Header  -->
-                    <Grid Grid.Row="0" Margin="0,0,0,10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
-                            Grid.Column="0"
-                            VerticalAlignment="Center"
-                            FontSize="18"
-                            FontWeight="SemiBold"
-                            Text="History" />
-                        <Button
-                            Grid.Column="1"
-                            VerticalAlignment="Center"
-                            Click="ClearHistoryButton_Click"
-                            Content="&#xe74d;"
-                            FontFamily="Segoe Fluent Icons"
-                            Style="{StaticResource AccentButtonStyle}" />
-                    </Grid>
+                    <TextBlock
+                        Grid.Row="0"
+                        Margin="0,0,0,10"
+                        HorizontalAlignment="Left"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="History" />
 
                     <!--  History List  -->
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer
+                        x:Name="HistoryScrollViewer"
+                        Grid.Row="1"
+                        VerticalScrollBarVisibility="Auto">
                         <ItemsControl x:Name="HistorySidebarList">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -544,21 +540,59 @@
                                             VerticalAlignment="Center"
                                             FontSize="14"
                                             Text="{Binding}"
-                                            TextWrapping="Wrap" />
+                                            TextWrapping="Wrap">
+                                            <TextBlock.Transitions>
+                                                <TransitionCollection>
+                                                    <ContentThemeTransition />
+                                                </TransitionCollection>
+                                            </TextBlock.Transitions>
+                                        </TextBlock>
                                         <Button
                                             Grid.Column="1"
                                             Margin="5"
                                             Padding="8,4"
                                             Click="UseHistorySidebarButton_Click"
-                                            Tag="{Binding}"
                                             Content="Use"
                                             FontSize="11"
-                                            Style="{StaticResource AccentButtonStyle}" />
+                                            Style="{StaticResource AccentButtonStyle}"
+                                            Tag="{Binding}" />
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </ScrollViewer>
+
+                    <!--  Empty State  -->
+                    <TextBlock
+                        x:Name="NoHistorySidebarText"
+                        Grid.Row="1"
+                        Margin="5"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        FontSize="12"
+                        IsHitTestVisible="False"
+                        Text="Aww no History? Let's Make some! :)"
+                        TextWrapping="WrapWholeWords"
+                        Visibility="Collapsed" />
+
+                    <!--  Delete Button at Bottom  -->
+                    <Button
+                        Grid.Row="2"
+                        Margin="0,10,0,0"
+                        Padding="1"
+                        HorizontalAlignment="Right"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Click="ClearHistoryButton_Click"
+                        Content="&#xe74d;"
+                        CornerRadius="3"
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="16">
+                        <Button.Resources>
+                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent" />
+                            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="Transparent" />
+                        </Button.Resources>
+                    </Button>
                 </Grid>
             </Border>
             <TeachingTip

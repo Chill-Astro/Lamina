@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using Lamina.ViewModels;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
@@ -9,6 +10,7 @@ using Windows.System;
 using Windows.UI.Core;
 using System.Linq;
 using Microsoft.UI.Xaml.Navigation;
+using Windows.Storage;
 
 namespace Lamina.Views;
 
@@ -25,24 +27,20 @@ public sealed partial class CalculatorPage : Page
         // Focus the page so keyboard input works immediately
         this.Loaded += (s, e) => this.Focus(FocusState.Programmatic);
         this.SizeChanged += CalculatorPage_SizeChanged;
-        ViewModel.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == "CalculationHistory")
-            {
-                UpdateHistorySidebar();
-            }
-        };
+        ViewModel.CalculationHistory.CollectionChanged += (s, e) => UpdateHistorySidebar();
         UpdateHistorySidebar();
     }
 
     private void CalculatorPage_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        const double WideWindowThreshold = 1200;
+        const double WideWindowThreshold = 600;
         
         if (e.NewSize.Width >= WideWindowThreshold)
         {
             HistorySidebar.Visibility = Visibility.Visible;
-            HistorySidebarColumn.Width = new GridLength(300);
+            // Adaptive width: 200px minimum, up to 280px based on window width
+            double sidebarWidth = Math.Min(280, Math.Max(200, e.NewSize.Width * 0.25));
+            HistorySidebarColumn.Width = new GridLength(sidebarWidth);
             HistoryButton.Visibility = Visibility.Collapsed;
         }
         else
@@ -56,6 +54,18 @@ public sealed partial class CalculatorPage : Page
     private void UpdateHistorySidebar()
     {
         HistorySidebarList.ItemsSource = ViewModel.CalculationHistory;
+        
+        // Show/hide empty state
+        if (ViewModel.CalculationHistory == null || ViewModel.CalculationHistory.Count == 0)
+        {
+            NoHistorySidebarText.Visibility = Visibility.Visible;
+            HistoryScrollViewer.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            NoHistorySidebarText.Visibility = Visibility.Collapsed;
+            HistoryScrollViewer.Visibility = Visibility.Visible;
+        }
     }
 
     // Boring History but not from School.
@@ -217,10 +227,25 @@ public sealed partial class CalculatorPage : Page
 
     private void HistoryButton_Click(object sender, RoutedEventArgs e) => OpenHistoryDialog();
 
-    private void ClearHistoryButton_Click(object sender, RoutedEventArgs e)
+    private async void ClearHistoryButton_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.CalculationHistory.Clear();
         UpdateHistorySidebar();
+        
+        // Delete the history file
+        try
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var historyFile = await localFolder.TryGetItemAsync("calculator_history.json");
+            if (historyFile != null)
+            {
+                await historyFile.DeleteAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error deleting history file: {ex.Message}");
+        }
     }
 
     private void UseHistorySidebarButton_Click(object sender, RoutedEventArgs e)
