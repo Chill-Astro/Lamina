@@ -21,6 +21,8 @@ namespace Lamina.Views;
 public sealed partial class AdvancedCalculatorPage : Page
 {
     private bool _isDialogOpen;
+    private const double MaxDisplayFontSize = 48;
+    private const double MinDisplayFontSize = 14;
     public AdvancedCalculatorViewModel ViewModel { get; }
 
     public AdvancedCalculatorPage()
@@ -359,5 +361,59 @@ public sealed partial class AdvancedCalculatorPage : Page
                 ViewModel.CursorPosition = result.Length;
             }
         }
+    }
+    private void DisplayTextBox_TextChanged(
+    object sender,
+    TextChangedEventArgs e)
+    {
+        ResizeDisplayText();
+    }
+
+    private void DisplayTextBox_SizeChanged(
+        object sender,
+        SizeChangedEventArgs e)
+    {
+        ResizeDisplayText();
+    }
+
+    private void ResizeDisplayText()
+    {
+        if (DisplayTextBox == null)
+            return;
+
+        string text = DisplayTextBox.Text ?? string.Empty;
+
+        // Always restore the maximum size first.
+        DisplayTextBox.FontSize = MaxDisplayFontSize;
+
+        if (string.IsNullOrEmpty(text))
+            return;
+
+        double availableWidth =
+            DisplayTextBox.ActualWidth
+            - DisplayTextBox.Padding.Left
+            - DisplayTextBox.Padding.Right;
+
+        if (availableWidth <= 0)
+            return;
+
+        // Measure the actual width of the text.
+        DisplayTextBox.Measure(
+            new Windows.Foundation.Size(
+                double.PositiveInfinity,
+                double.PositiveInfinity));
+
+        double textWidth = DisplayTextBox.DesiredSize.Width;
+
+        if (textWidth <= availableWidth)
+            return;
+
+        // Shrink proportionally.
+        double newFontSize =
+            MaxDisplayFontSize * availableWidth / textWidth;
+
+        DisplayTextBox.FontSize = Math.Max(
+            MinDisplayFontSize,
+            newFontSize);
     }
 }

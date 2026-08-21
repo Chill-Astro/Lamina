@@ -260,8 +260,11 @@
                 FontWeight="SemiBold"
                 GotFocus="DisplayTextBox_GotFocus"
                 LostFocus="DisplayTextBox_LostFocus"
+                SizeChanged="DisplayTextBox_SizeChanged"
                 Text="{x:Bind ViewModel.DisplayText, Mode=TwoWay}"
-                TextAlignment="Right" />
+                TextAlignment="Right"
+                TextChanged="DisplayTextBox_TextChanged"
+                TextWrapping="NoWrap" />
             <Grid
                 x:Name="ButtonsGrid"
                 Grid.Row="2"

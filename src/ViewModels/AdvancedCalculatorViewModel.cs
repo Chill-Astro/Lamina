@@ -1,27 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
+using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NCalc;
 using Windows.Storage;
-using System.Text.RegularExpressions;
 
 namespace Lamina.ViewModels;
 
 public partial class AdvancedCalculatorViewModel : ObservableObject
 {
-    private string _displayText = "";    
+    private string _displayText = "";
     private string _operationText = "";
     private bool _isInverse;
     private string _angleModeText = "DEG";
-    private int _cursorPosition = 0;
-    private bool _isEditing = false;
+    private int _cursorPosition;
+    private bool _isEditing;
 
     public ObservableCollection<string> CalculationHistory { get; } = new();
+
     private const string HistoryFileName = "advanced_calculator_history.json";
 
     public AdvancedCalculatorViewModel()
@@ -40,30 +39,39 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         MoveCursorLeftCommand = new RelayCommand(MoveCursorLeft);
         MoveCursorRightCommand = new RelayCommand(MoveCursorRight);
         MoveCursorToPositionCommand = new RelayCommand<int>(MoveCursorToPosition);
+
         LoadHistoryAsync();
     }
+
+    #region History
 
     private async void LoadHistoryAsync()
     {
         try
         {
             var localFolder = ApplicationData.Current.LocalFolder;
-            var historyFile = await localFolder.TryGetItemAsync(HistoryFileName) as StorageFile;
-            
-            if (historyFile != null)
+
+            var historyFile =
+                await localFolder.TryGetItemAsync(HistoryFileName) as StorageFile;
+
+            if (historyFile == null)
+                return;
+
+            var historyText = await FileIO.ReadTextAsync(historyFile);
+
+            var historyLines = historyText.Split(
+                new[] { '\n' },
+                StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var line in historyLines)
             {
-                var historyText = await FileIO.ReadTextAsync(historyFile);
-                var historyLines = historyText.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                
-                foreach (var line in historyLines)
-                {
-                    CalculationHistory.Add(line);
-                }
+                CalculationHistory.Add(line);
             }
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error loading history: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine(
+                $"Error loading history: {ex.Message}");
         }
     }
 
@@ -72,15 +80,23 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         try
         {
             var localFolder = ApplicationData.Current.LocalFolder;
-            var historyFile = await localFolder.CreateFileAsync(HistoryFileName, CreationCollisionOption.ReplaceExisting);
+
+            var historyFile = await localFolder.CreateFileAsync(
+                HistoryFileName,
+                CreationCollisionOption.ReplaceExisting);
+
             var historyText = string.Join("\n", CalculationHistory);
+
             await FileIO.WriteTextAsync(historyFile, historyText);
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error saving history: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine(
+                $"Error saving history: {ex.Message}");
         }
     }
+
+    #endregion
 
     #region Properties
 
@@ -91,8 +107,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         {
             if (SetProperty(ref _displayText, value))
             {
-                // Adjust cursor position if text changed from button input
-                if (value != null && _cursorPosition > value.Length && !_isEditing)
+                if (!_isEditing && _cursorPosition > value.Length)
                 {
                     _cursorPosition = value.Length;
                     OnPropertyChanged(nameof(CursorPosition));
@@ -133,7 +148,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     public string SinLabel => IsInverse ? "Asin(" : "Sin(";
     public string CosLabel => IsInverse ? "Acos(" : "Cos(";
     public string TanLabel => IsInverse ? "Atan(" : "Tan(";
-    
+
     public string SinDisplay => IsInverse ? "sin⁻¹" : "sin";
     public string CosDisplay => IsInverse ? "cos⁻¹" : "cos";
     public string TanDisplay => IsInverse ? "tan⁻¹" : "tan";
@@ -171,43 +186,54 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
 
     #endregion
 
-    #region Logic
+    #region Input
 
     private void InputNumber(string input)
     {
-        // Allow function names (Sin, Cos, etc.) even when editing
-        bool isFunction = input.StartsWith("Sin") || input.StartsWith("Cos") || input.StartsWith("Tan") ||
-                         input.StartsWith("Asin") || input.StartsWith("Acos") || input.StartsWith("Atan") ||
-                         input.StartsWith("Sqrt") || input.StartsWith("Log") || input.StartsWith("Log10") ||
-                         input.StartsWith("Pow") || input == "(" || input == ")" || input == "E" || input == "Pi";
-        
-        if (_isEditing && !isFunction) return; // Disable number/operator input when editing, but allow functions
-        
-        if (DisplayText == "Error")
+        if (string.IsNullOrEmpty(input))
+            return;
+
+        bool isFunction =
+            input.StartsWith("Sin", StringComparison.OrdinalIgnoreCase) ||
+            input.StartsWith("Cos", StringComparison.OrdinalIgnoreCase) ||
+            input.StartsWith("Tan", StringComparison.OrdinalIgnoreCase) ||
+            input.StartsWith("Asin", StringComparison.OrdinalIgnoreCase) ||
+            input.StartsWith("Acos", StringComparison.OrdinalIgnoreCase) ||
+            input.StartsWith("Atan", StringComparison.OrdinalIgnoreCase) ||
+            input.StartsWith("Sqrt", StringComparison.OrdinalIgnoreCase) ||
+            input.StartsWith("Log", StringComparison.OrdinalIgnoreCase) ||
+            input.StartsWith("Log10", StringComparison.OrdinalIgnoreCase) ||
+            input.StartsWith("Pow", StringComparison.OrdinalIgnoreCase) ||
+            input == "(" ||
+            input == ")" ||
+            input == "E" ||
+            input == "Pi" ||
+            input == "π";
+
+        if (_isEditing && !isFunction)
+            return;
+
+        if (DisplayText == "Error" || DisplayText == "Division by zero")
         {
             DisplayText = input;
             CursorPosition = input.Length;
             return;
         }
 
-        if (DisplayText == "")
-        {
-            DisplayText = input;
-            CursorPosition = input.Length;
-        }
-        else
-        {
-            int pos = Math.Clamp(CursorPosition, 0, DisplayText.Length);
-            DisplayText = DisplayText.Insert(pos, input);
-            CursorPosition = pos + input.Length;
-        }
+        int position = Math.Clamp(
+            CursorPosition,
+            0,
+            DisplayText.Length);
+
+        DisplayText = DisplayText.Insert(position, input);
+        CursorPosition = position + input.Length;
     }
 
     private void SetOperator(string op)
     {
-        // Allow operators when editing for expression typing
-        // if (_isEditing) return; // Disable button input when editing
-        
+        if (string.IsNullOrEmpty(op))
+            return;
+
         string nCalcOp = op switch
         {
             "×" => "*",
@@ -215,89 +241,128 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
             _ => op
         };
 
-        if (DisplayText == "Error")
+        if (DisplayText == "Error" || DisplayText == "Division by zero")
         {
             DisplayText = nCalcOp;
             CursorPosition = nCalcOp.Length;
             return;
         }
 
-        if ((DisplayText == "") && nCalcOp == "-")
+        if (DisplayText == "" && nCalcOp == "-")
         {
             DisplayText = "-";
             CursorPosition = 1;
+            return;
         }
-        else
-        {
-            int pos = Math.Clamp(CursorPosition, 0, DisplayText.Length);
-            DisplayText = DisplayText.Insert(pos, nCalcOp);
-            CursorPosition = pos + nCalcOp.Length;
-        }
+
+        int position = Math.Clamp(
+            CursorPosition,
+            0,
+            DisplayText.Length);
+
+        DisplayText = DisplayText.Insert(position, nCalcOp);
+        CursorPosition = position + nCalcOp.Length;
     }
 
     private void InputDecimal()
     {
-        if (_isEditing) return; // Disable button input when editing
-        
-        if (DisplayText == "Error")
+        if (_isEditing)
+            return;
+
+        if (DisplayText == "Error" || DisplayText == "Division by zero")
         {
             DisplayText = ".";
             CursorPosition = 1;
             return;
         }
 
-        if (DisplayText == "")
-        {
-            DisplayText = ".";
-            CursorPosition = 1;
-            return;
-        }
+        int position = Math.Clamp(
+            CursorPosition,
+            0,
+            DisplayText.Length);
 
-        int pos = Math.Clamp(CursorPosition, 0, DisplayText.Length);
-        
-        // Check if the current number segment already has a decimal
-        var parts = DisplayText.Split(new[] { '+', '-', '*', '/', '(', ')', ',' });
-        var currentSegment = DisplayText.Substring(0, pos);
-        var lastSegmentIndex = currentSegment.LastIndexOfAny(new[] { '+', '-', '*', '/', '(', ')', ',' });
-        var segmentToCheck = lastSegmentIndex < 0 ? currentSegment : currentSegment.Substring(lastSegmentIndex + 1);
-        
-        if (!segmentToCheck.Contains("."))
+        string beforeCursor = DisplayText.Substring(0, position);
+
+        int lastSeparator = beforeCursor.LastIndexOfAny(
+            new[] { '+', '-', '*', '/', '(', ')', ',' });
+
+        string currentNumber = lastSeparator < 0
+            ? beforeCursor
+            : beforeCursor.Substring(lastSeparator + 1);
+
+        if (!currentNumber.Contains("."))
         {
-            DisplayText = DisplayText.Insert(pos, ".");
-            CursorPosition = pos + 1;
+            DisplayText = DisplayText.Insert(position, ".");
+            CursorPosition = position + 1;
         }
     }
 
+    private void InputComma()
+    {
+        if (_isEditing || string.IsNullOrEmpty(DisplayText))
+            return;
+
+        int position = Math.Clamp(
+            CursorPosition,
+            0,
+            DisplayText.Length);
+
+        if (position > 0 && DisplayText[position - 1] != ',')
+        {
+            DisplayText = DisplayText.Insert(position, ",");
+            CursorPosition = position + 1;
+        }
+    }
+
+    private void Paste(string text)
+    {
+        if (_isEditing || string.IsNullOrWhiteSpace(text))
+            return;
+
+        if (DisplayText == "Error" || DisplayText == "Division by zero")
+        {
+            DisplayText = text;
+            CursorPosition = text.Length;
+            return;
+        }
+
+        int position = Math.Clamp(
+            CursorPosition,
+            0,
+            DisplayText.Length);
+
+        DisplayText = DisplayText.Insert(position, text);
+        CursorPosition = position + text.Length;
+    }
+
+    #endregion
+
+    #region Editing
+
     private void Backspace()
     {
-        if (_isEditing) return; // Disable button input when editing
-        
-        if (DisplayText == "Error")
+        if (_isEditing)
+            return;
+
+        if (DisplayText == "Error" || DisplayText == "Division by zero")
         {
             DisplayText = "";
             CursorPosition = 0;
             return;
         }
 
-        if (DisplayText.Length > 0)
+        if (string.IsNullOrEmpty(DisplayText))
+            return;
+
+        int position = Math.Clamp(
+            CursorPosition,
+            0,
+            DisplayText.Length);
+
+        if (position > 0)
         {
-            int pos = Math.Clamp(CursorPosition, 0, DisplayText.Length);
-            if (pos > 0)
-            {
-                DisplayText = DisplayText.Remove(pos - 1, 1);
-                CursorPosition = pos - 1;
-            }
-            else
-            {
-                DisplayText = DisplayText.Substring(0, DisplayText.Length - 1);
-                CursorPosition = DisplayText.Length;
-            }
-            
-            if (string.IsNullOrEmpty(DisplayText))
-            {
-                DisplayText = "";
-                CursorPosition = 0;
-            }
+            DisplayText = DisplayText.Remove(position - 1, 1);
+            CursorPosition = position - 1;
         }
     }
 
@@ -310,69 +375,39 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
 
     private void Negate()
     {
-        if (_isEditing) return; // Disable button input when editing
-        if (DisplayText == "" || DisplayText == "Error") return;
+        if (_isEditing ||
+            string.IsNullOrEmpty(DisplayText) ||
+            DisplayText == "Error")
+        {
+            return;
+        }
 
-        // Wrap the existing expression in a negative bracket
-        if (DisplayText.StartsWith("-(") && DisplayText.EndsWith(")"))
-            DisplayText = DisplayText.Substring(2, DisplayText.Length - 3);
+        if (DisplayText.StartsWith("-(") &&
+            DisplayText.EndsWith(")"))
+        {
+            DisplayText = DisplayText.Substring(
+                2,
+                DisplayText.Length - 3);
+        }
         else
+        {
             DisplayText = $"-({DisplayText})";
+        }
+
+        CursorPosition = DisplayText.Length;
     }
 
     private void Reciprocal()
     {
-        if (_isEditing) return; // Disable button input when editing
-        if (DisplayText == "" || DisplayText == "Error") return;
-        DisplayText = $"1/({DisplayText})";
-    }
-
-    private void InputComma()
-    {
-        if (_isEditing) return; // Disable button input when editing
-        if (DisplayText != "" && !DisplayText.EndsWith(","))
-            DisplayText += ",";
-    }
-
-    private void CycleAngleMode()
-    {
-        AngleModeText = AngleModeText == "DEG" ? "RAD" : "DEG";
-    }
-
-    private void Paste(string text)
-    {
-        if (_isEditing) return; // Disable button input when editing
-        if (string.IsNullOrWhiteSpace(text)) return;
-        
-        if (DisplayText == "Error")
+        if (_isEditing ||
+            string.IsNullOrEmpty(DisplayText) ||
+            DisplayText == "Error")
         {
-            DisplayText = text;
-            CursorPosition = text.Length;
             return;
         }
 
-        // Try to parse as a number first
-        if (double.TryParse(text, out _))
-        {
-            int pos = Math.Clamp(CursorPosition, 0, DisplayText.Length);
-            DisplayText = DisplayText.Insert(pos, text);
-            CursorPosition = pos + text.Length;
-        }
-        else
-        {
-            // If not a single number, append the text (allows pasting expressions)
-            if (DisplayText == "")
-            {
-                DisplayText = text;
-                CursorPosition = text.Length;
-            }
-            else
-            {
-                int pos = Math.Clamp(CursorPosition, 0, DisplayText.Length);
-                DisplayText = DisplayText.Insert(pos, text);
-                CursorPosition = pos + text.Length;
-            }
-        }
+        DisplayText = $"1/({DisplayText})";
+        CursorPosition = DisplayText.Length;
     }
 
     private void MoveCursorLeft()
@@ -382,72 +417,40 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
 
     private void MoveCursorRight()
     {
-        CursorPosition = Math.Min(DisplayText?.Length ?? 0, CursorPosition + 1);
+        CursorPosition = Math.Min(
+            DisplayText.Length,
+            CursorPosition + 1);
     }
 
     private void MoveCursorToPosition(int position)
     {
-        CursorPosition = Math.Clamp(position, 0, DisplayText?.Length ?? 0);
+        CursorPosition = Math.Clamp(
+            position,
+            0,
+            DisplayText.Length);
     }
+
+    private void CycleAngleMode()
+    {
+        AngleModeText = AngleModeText == "DEG"
+            ? "RAD"
+            : "DEG";
+    }
+
+    #endregion
+
+    #region Calculation
 
     private void Calculate()
     {
         try
         {
-            string expressionToEvaluate = DisplayText;
+            string originalExpression = DisplayText;
 
-            if (string.IsNullOrWhiteSpace(expressionToEvaluate))
+            if (string.IsNullOrWhiteSpace(originalExpression))
                 return;
 
-            // Replace operators with NCALC-compatible format
-            expressionToEvaluate = expressionToEvaluate
-                .Replace("×", "*")
-                .Replace("÷", "/")
-                .Replace("^", "^");
-
-            // Replace constant names with NCALC parameter references
-            expressionToEvaluate = System.Text.RegularExpressions.Regex.Replace(
-                expressionToEvaluate, @"\bpi\b", "[Pi]", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            expressionToEvaluate = expressionToEvaluate.Replace("π", "[Pi]");
-            expressionToEvaluate = System.Text.RegularExpressions.Regex.Replace(
-                expressionToEvaluate, @"\be\b", "[E]", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-
-            // Replace our function names with custom names to avoid NCALC conflicts (case-insensitive)
-            expressionToEvaluate = System.Text.RegularExpressions.Regex.Replace(
-                expressionToEvaluate, @"\bSin\(", "TrigSin(", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            expressionToEvaluate = System.Text.RegularExpressions.Regex.Replace(
-                expressionToEvaluate, @"\bCos\(", "TrigCos(", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            expressionToEvaluate = System.Text.RegularExpressions.Regex.Replace(
-                expressionToEvaluate, @"\bTan\(", "TrigTan(", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            expressionToEvaluate = System.Text.RegularExpressions.Regex.Replace(
-                expressionToEvaluate, @"\bAsin\(", "TrigAsin(", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            expressionToEvaluate = System.Text.RegularExpressions.Regex.Replace(
-                expressionToEvaluate, @"\bAcos\(", "TrigAcos(", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            expressionToEvaluate = System.Text.RegularExpressions.Regex.Replace(
-                expressionToEvaluate, @"\bAtan\(", "TrigAtan(", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            expressionToEvaluate = System.Text.RegularExpressions.Regex.Replace(
-                expressionToEvaluate, @"\bSqrt\(", "TrigSqrt(", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            expressionToEvaluate = System.Text.RegularExpressions.Regex.Replace(
-                expressionToEvaluate, @"\bLog\(", "TrigLog(", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            expressionToEvaluate = System.Text.RegularExpressions.Regex.Replace(
-                expressionToEvaluate, @"\bLog10\(", "TrigLog10(", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-
-            // Handle Cube Root symbol replacement
-            if (expressionToEvaluate.Contains("³√("))
-            {
-                expressionToEvaluate = expressionToEvaluate.Replace("³√(", "Cbrt(");
-            }
-
-            // Auto-close parentheses for NCalc safety
-            int openBrackets = expressionToEvaluate.Count(f => f == '(');
-            int closeBrackets = expressionToEvaluate.Count(f => f == ')');
-            for (int i = 0; i < (openBrackets - closeBrackets); i++)
-                expressionToEvaluate += ")";
-
-            // Handle Factorial replacement - handle expressions ending with !
-            // This handles both simple numbers like "5!" and expressions like "(5+3)!"
-            expressionToEvaluate = System.Text.RegularExpressions.Regex.Replace(
-                expressionToEvaluate, @"([0-9.\(\)\+\-\*\/]+)!", "Fact($1)");
+            string expressionToEvaluate = PrepareExpression(originalExpression);
 
             var expression = new Expression(expressionToEvaluate);
 
@@ -455,153 +458,352 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
             expression.Parameters["E"] = Math.E;
 
             bool isDeg = AngleModeText == "DEG";
-            expression.EvaluateFunction += (name, args) =>
-            {
-                try
-                {
-                    var parameters = args.EvaluateParameters();
-                    if (parameters.Length > 0)
-                    {
-                        double val = Convert.ToDouble(parameters[0]);
 
-                        switch (name)
-                        {
-                            case "TrigSin":
-                                args.Result = Math.Sin(isDeg ? val * Math.PI / 180.0 : val);
-                                break;
-                            case "TrigCos":
-                                args.Result = Math.Cos(isDeg ? val * Math.PI / 180.0 : val);
-                                break;
-                            case "TrigTan":
-                                // Tan is undefined at 90° and 270° (π/2 and 3π/2 in radians)
-                                double tanAngle = isDeg ? val * Math.PI / 180.0 : val;
-                                double tanCheck = Math.Abs(tanAngle % (Math.PI / 2));
-                                if (tanCheck < 1e-10 || Math.Abs(tanCheck - Math.PI / 2) < 1e-10)
-                                    args.Result = double.NaN;
-                                else
-                                    args.Result = Math.Tan(tanAngle);
-                                break;
-                            case "TrigAsin":
-                                if (val < -1 || val > 1)
-                                    args.Result = double.NaN;
-                                else
-                                {
-                                    double asin = Math.Asin(val);
-                                    args.Result = isDeg ? asin * 180.0 / Math.PI : asin;
-                                }
-                                break;
-                            case "TrigAcos":
-                                if (val < -1 || val > 1)
-                                    args.Result = double.NaN;
-                                else
-                                {
-                                    double acos = Math.Acos(val);
-                                    args.Result = isDeg ? acos * 180.0 / Math.PI : acos;
-                                }
-                                break;
-                            case "TrigAtan":
-                                double atan = Math.Atan(val);
-                                args.Result = isDeg ? atan * 180.0 / Math.PI : atan;
-                                break;
-                            case "TrigSqrt":
-                                if (val < 0)
-                                    args.Result = double.NaN;
-                                else
-                                    args.Result = Math.Sqrt(val);
-                                break;
-                            case "TrigLog":
-                                if (val <= 0)
-                                    args.Result = double.NaN;
-                                else
-                                    args.Result = Math.Log(val);
-                                break;
-                            case "TrigLog10":
-                                if (val <= 0)
-                                    args.Result = double.NaN;
-                                else
-                                    args.Result = Math.Log10(val);
-                                break;
-                            case "Fact":
-                                args.Result = GetFactorial(val);
-                                break;
-                            case "Cbrt":
-                                args.Result = Math.Pow(val, 1.0 / 3.0);
-                                break;
-                        }
-                    }
-                }
-                catch
-                {
-                    args.Result = double.NaN;
-                }
+            /*
+             * NCalc 7.1 custom functions.
+             *
+             * IMPORTANT:
+             * args.Evaluate(0) is the correct API for evaluating
+             * the first argument.
+             */
+
+            expression.Functions["TrigSin"] = args =>
+            {
+                double value = Convert.ToDouble(args.Evaluate(0));
+                double angle = isDeg ? DegreesToRadians(value) : value;
+                return Math.Sin(angle);
             };
 
-            var result = expression.Evaluate();
-            
-            if (result != null)
+            expression.Functions["TrigCos"] = args =>
             {
-                double numericResult;
-                if (double.TryParse(result.ToString(), out numericResult))
-                {
-                    if (double.IsNaN(numericResult) || double.IsInfinity(numericResult))
-                    {
-                        DisplayText = "Error";
-                    }
-                    else
-                    {
-                        OperationText = DisplayText + " =";
-                        DisplayText = numericResult.ToString("G15");
-                        CalculationHistory.Add($"{OperationText} {DisplayText}");
-                        SaveHistoryAsync();
-                    }
-                }
-                else
-                {
-                    DisplayText = "Error";
-                }
-            }
-            else
+                double value = Convert.ToDouble(args.Evaluate(0));
+                double angle = isDeg ? DegreesToRadians(value) : value;
+                return Math.Cos(angle);
+            };
+
+            expression.Functions["TrigTan"] = args =>
+            {
+                double value = Convert.ToDouble(args.Evaluate(0));
+                double angle = isDeg ? DegreesToRadians(value) : value;
+
+                if (Math.Abs(Math.Cos(angle)) < 1e-12)
+                    return double.NaN;
+
+                return Math.Tan(angle);
+            };
+
+            expression.Functions["TrigAsin"] = args =>
+            {
+                double value = Convert.ToDouble(args.Evaluate(0));
+
+                if (value < -1 || value > 1)
+                    return double.NaN;
+
+                double result = Math.Asin(value);
+
+                return isDeg
+                    ? RadiansToDegrees(result)
+                    : result;
+            };
+
+            expression.Functions["TrigAcos"] = args =>
+            {
+                double value = Convert.ToDouble(args.Evaluate(0));
+
+                if (value < -1 || value > 1)
+                    return double.NaN;
+
+                double result = Math.Acos(value);
+
+                return isDeg
+                    ? RadiansToDegrees(result)
+                    : result;
+            };
+
+            expression.Functions["TrigAtan"] = args =>
+            {
+                double value = Convert.ToDouble(args.Evaluate(0));
+
+                double result = Math.Atan(value);
+
+                return isDeg
+                    ? RadiansToDegrees(result)
+                    : result;
+            };
+
+            expression.Functions["TrigSqrt"] = args =>
+            {
+                double value = Convert.ToDouble(args.Evaluate(0));
+
+                return value < 0
+                    ? double.NaN
+                    : Math.Sqrt(value);
+            };
+
+            expression.Functions["TrigLog"] = args =>
+            {
+                double value = Convert.ToDouble(args.Evaluate(0));
+
+                return value <= 0
+                    ? double.NaN
+                    : Math.Log(value);
+            };
+
+            expression.Functions["TrigLog10"] = args =>
+            {
+                double value = Convert.ToDouble(args.Evaluate(0));
+
+                return value <= 0
+                    ? double.NaN
+                    : Math.Log10(value);
+            };
+
+            expression.Functions["Fact"] = args =>
+            {
+                double value = Convert.ToDouble(args.Evaluate(0));
+                return GetFactorial(value);
+            };
+
+            expression.Functions["Cbrt"] = args =>
+            {
+                double value = Convert.ToDouble(args.Evaluate(0));
+                return Math.Cbrt(value);
+            };
+
+            object result = expression.Evaluate();
+
+            if (result == null)
             {
                 DisplayText = "Error";
+                return;
             }
+
+            double numericResult = Convert.ToDouble(result);
+
+            if (double.IsNaN(numericResult) ||
+                double.IsInfinity(numericResult))
+            {
+                DisplayText = "Error";
+                return;
+            }
+
+            OperationText = originalExpression + " =";
+            DisplayText = numericResult.ToString("G15");
+            CursorPosition = DisplayText.Length;
+
+            CalculationHistory.Add(
+                $"{OperationText} {DisplayText}");
+
+            SaveHistoryAsync();
         }
         catch (DivideByZeroException)
         {
             DisplayText = "Division by zero";
+            CursorPosition = DisplayText.Length;
         }
         catch (Exception ex)
         {
             DisplayText = "Error";
-            System.Diagnostics.Debug.WriteLine($"Calculation Error: {ex.Message}");
+            CursorPosition = DisplayText.Length;
+
+            System.Diagnostics.Debug.WriteLine(
+                $"Calculation Error: {ex.Message}");
         }
+    }
+
+    private string PrepareExpression(string input)
+    {
+        string result = input
+            .Replace("×", "*")
+            .Replace("÷", "/")
+            .Trim();
+
+        // Constants.
+        result = Regex.Replace(
+            result,
+            @"\bpi\b",
+            "[Pi]",
+            RegexOptions.IgnoreCase);
+
+        result = result.Replace("π", "[Pi]");
+
+        // Use word boundaries so scientific notation such as 1e3
+        // is not accidentally modified.
+        result = Regex.Replace(
+            result,
+            @"(?<![0-9.])\be\b",
+            "[E]",
+            RegexOptions.IgnoreCase);
+
+        // Replace longer function names before shorter ones.
+        result = Regex.Replace(
+            result,
+            @"\bLog10\s*\(",
+            "TrigLog10(",
+            RegexOptions.IgnoreCase);
+
+        result = Regex.Replace(
+            result,
+            @"\bAsin\s*\(",
+            "TrigAsin(",
+            RegexOptions.IgnoreCase);
+
+        result = Regex.Replace(
+            result,
+            @"\bAcos\s*\(",
+            "TrigAcos(",
+            RegexOptions.IgnoreCase);
+
+        result = Regex.Replace(
+            result,
+            @"\bAtan\s*\(",
+            "TrigAtan(",
+            RegexOptions.IgnoreCase);
+
+        result = Regex.Replace(
+            result,
+            @"\bSin\s*\(",
+            "TrigSin(",
+            RegexOptions.IgnoreCase);
+
+        result = Regex.Replace(
+            result,
+            @"\bCos\s*\(",
+            "TrigCos(",
+            RegexOptions.IgnoreCase);
+
+        result = Regex.Replace(
+            result,
+            @"\bTan\s*\(",
+            "TrigTan(",
+            RegexOptions.IgnoreCase);
+
+        result = Regex.Replace(
+            result,
+            @"\bSqrt\s*\(",
+            "TrigSqrt(",
+            RegexOptions.IgnoreCase);
+
+        result = Regex.Replace(
+            result,
+            @"\bLog\s*\(",
+            "TrigLog(",
+            RegexOptions.IgnoreCase);
+
+        // Cube root button/input.
+        result = result.Replace("³√(", "Cbrt(");
+
+        // Convert simple factorial operands:
+        // 5!      -> Fact(5)
+        // (2+3)!  -> Fact((2+3))
+        result = ReplaceFactorials(result);
+
+        // Auto-close missing parentheses.
+        int openBrackets = result.Count(c => c == '(');
+        int closeBrackets = result.Count(c => c == ')');
+
+        if (openBrackets > closeBrackets)
+        {
+            result += new string(
+                ')',
+                openBrackets - closeBrackets);
+        }
+
+        return result;
+    }
+
+    private string ReplaceFactorials(string expression)
+    {
+        while (expression.Contains('!'))
+        {
+            int factorialIndex = expression.IndexOf('!');
+
+            if (factorialIndex <= 0)
+                break;
+
+            int startIndex;
+
+            if (expression[factorialIndex - 1] == ')')
+            {
+                int depth = 0;
+                startIndex = -1;
+
+                for (int i = factorialIndex - 1; i >= 0; i--)
+                {
+                    if (expression[i] == ')')
+                        depth++;
+                    else if (expression[i] == '(')
+                    {
+                        depth--;
+
+                        if (depth == 0)
+                        {
+                            startIndex = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (startIndex < 0)
+                    break;
+            }
+            else
+            {
+                startIndex = factorialIndex - 1;
+
+                while (startIndex > 0 &&
+                       (char.IsDigit(expression[startIndex - 1]) ||
+                        expression[startIndex - 1] == '.'))
+                {
+                    startIndex--;
+                }
+            }
+
+            string operand = expression.Substring(
+                startIndex,
+                factorialIndex - startIndex);
+
+            expression =
+                expression.Substring(0, startIndex) +
+                $"Fact({operand})" +
+                expression.Substring(factorialIndex + 1);
+        }
+
+        return expression;
+    }
+
+    private static double DegreesToRadians(double degrees)
+    {
+        return degrees * Math.PI / 180.0;
+    }
+
+    private static double RadiansToDegrees(double radians)
+    {
+        return radians * 180.0 / Math.PI;
     }
 
     private double GetFactorial(double n)
     {
-        if (n < 0 || double.IsInfinity(n) || double.IsNaN(n))
+        if (n < 0 ||
+            double.IsNaN(n) ||
+            double.IsInfinity(n))
+        {
             return double.NaN;
-        
+        }
+
         if (n != Math.Floor(n))
             return double.NaN;
-            
-        if (n > 170) // Prevent stack overflow and overflow
+
+        if (n > 170)
             return double.PositiveInfinity;
-            
-        long factorial = 1;
+
+        double factorial = 1;
+
         for (long i = 2; i <= (long)n; i++)
         {
-            try
-            {
-                checked
-                {
-                    factorial *= i;
-                }
-            }
-            catch (OverflowException)
-            {
-                return double.PositiveInfinity;
-            }
+            factorial *= i;
         }
+
         return factorial;
     }
 
