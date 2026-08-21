@@ -22,7 +22,7 @@ public sealed partial class AdvancedCalculatorPage : Page
 {
     private bool _isDialogOpen;
     private const double MaxDisplayFontSize = 48;
-    private const double MinDisplayFontSize = 1;
+    private const double MinDisplayFontSize = 10;
     public AdvancedCalculatorViewModel ViewModel { get; }
 
     public AdvancedCalculatorPage()
