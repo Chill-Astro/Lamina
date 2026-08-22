@@ -196,10 +196,6 @@ public sealed partial class AdvancedCalculatorPage : Page
                     ViewModel.InputNumberCommand.Execute(")");
                     targetButton = BtnRightBracket;
                     break;
-                case VirtualKey.Number6 when shift:
-                    ViewModel.InputNumberCommand.Execute("Pow(");
-                    break;
-
                 case VirtualKey.Add:
                 case (VirtualKey)187 when shift:
                     ViewModel.SetOperatorCommand.Execute("+");
