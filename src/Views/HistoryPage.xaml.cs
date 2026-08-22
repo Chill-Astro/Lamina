@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using Windows.Storage;
 
 namespace Lamina.Views
@@ -34,7 +34,7 @@ namespace Lamina.Views
             // Clear the history list
             _history.Clear();
             UpdateHistoryDisplay();
-            
+
             // Also delete the history files
             try
             {
@@ -44,7 +44,7 @@ namespace Lamina.Views
                 {
                     await historyFile.DeleteAsync();
                 }
-                
+
                 var advancedHistoryFile = await localFolder.TryGetItemAsync("advanced_calculator_history.json");
                 if (advancedHistoryFile != null)
                 {
@@ -59,7 +59,7 @@ namespace Lamina.Views
 
         public void SetHistory(List<string> history)
         {
-            _history = history;
+            _history = history ?? new List<string>();
             UpdateHistoryDisplay();
         }
 
@@ -73,6 +73,7 @@ namespace Lamina.Views
             else
             {
                 NoHistoryText.Visibility = Visibility.Collapsed;
+                HistoryList.ItemsSource = null;
                 HistoryList.ItemsSource = _history;
             }
         }
@@ -81,37 +82,20 @@ namespace Lamina.Views
         {
             if (sender is Button button && button.Tag is string historyItem)
             {
-                // Extract the result part (after " = ")
-                string[] parts = historyItem.Split(new[] { " = " }, StringSplitOptions.None);
-                if (parts.Length >= 2)
-                {
-                    string result = parts[1];
-                    HistoryItemSelected?.Invoke(result);
-                }
-            }
-        }
+                string result = historyItem;
 
-        private void HistoryItem_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            if (sender is Border border && border.Parent is Grid grid)
-            {
-                var button = grid.FindName("UseButton") as Button;
-                if (button != null)
+                // Safely split by '=' regardless of surrounding spaces
+                if (historyItem.Contains('='))
                 {
-                    button.Visibility = Visibility.Visible;
+                    var parts = historyItem.Split('=');
+                    if (parts.Length >= 2)
+                    {
+                        // Take the last part as the result (e.g., "10" from "5 + 5 = 10")
+                        result = parts[parts.Length - 1].Trim();
+                    }
                 }
-            }
-        }
 
-        private void HistoryItem_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            if (sender is Border border && border.Parent is Grid grid)
-            {
-                var button = grid.FindName("UseButton") as Button;
-                if (button != null)
-                {
-                    button.Visibility = Visibility.Collapsed;
-                }
+                HistoryItemSelected?.Invoke(result);
             }
         }
     }
