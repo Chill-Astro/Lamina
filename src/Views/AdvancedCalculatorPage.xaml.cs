@@ -311,6 +311,11 @@ public sealed partial class AdvancedCalculatorPage : Page
                 XamlRoot = this.XamlRoot,
                 RequestedTheme = this.RequestedTheme,
                 MaxWidth = 600,
+                MaxHeight = 300,
+                MinHeight = 300,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                CloseButtonStyle = (Style)Application.Current.Resources["AccentButtonStyle"],
                 Padding = new Thickness(20),
             };
 
