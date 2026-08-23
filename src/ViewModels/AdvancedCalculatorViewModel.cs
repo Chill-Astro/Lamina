@@ -846,7 +846,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     private static double RadiansToDegrees(double radians)
     {
         return radians * 180.0 / Math.PI;
-    }F
+    }
 
     private double GetFactorial(double n)
     {

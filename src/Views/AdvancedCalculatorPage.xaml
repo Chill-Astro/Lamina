@@ -311,8 +311,10 @@
                         TextAlignment="Right" />
                     <TextBox
                         x:Name="DisplayTextBox"
+                        Height="75"
                         Margin="12,7,12,10"
                         HorizontalAlignment="Stretch"
+                        VerticalContentAlignment="Center"
                         Background="Transparent"
                         BorderThickness="0"
                         FontSize="48"
