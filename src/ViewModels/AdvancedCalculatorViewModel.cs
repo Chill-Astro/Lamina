@@ -19,6 +19,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     private string _angleModeText = "DEG";
     private int _cursorPosition;
     private bool _isEditing;
+    private int _divisionByZeroCount = 0;
 
     public ObservableCollection<string> CalculationHistory { get; } = new();
 
@@ -174,7 +175,6 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         {
             if (SetProperty(ref _isEditing, value))
             {
-                // Clear secondary display when user starts editing
                 if (value && !string.IsNullOrEmpty(ExpressionText))
                 {
                     ExpressionText = "";
@@ -229,11 +229,10 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
             input == "Pi" ||
             input == "π";
 
-        // Allow button inputs when editing, but don't process them
         if (_isEditing && !isFunction)
             return;
 
-        if (DisplayText == "NCalc Error ❌" || DisplayText == "Div By Zero Not Defined ❌")
+        if (IsErrorState(DisplayText))
         {
             DisplayText = input;
             CursorPosition = input.Length;
@@ -261,7 +260,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
             _ => op
         };
 
-        if (DisplayText == "NCalc Error ❌" || DisplayText == "Div By Zero Not Defined ❌")
+        if (IsErrorState(DisplayText))
         {
             DisplayText = nCalcOp;
             CursorPosition = nCalcOp.Length;
@@ -289,7 +288,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         if (_isEditing)
             return;
 
-        if (DisplayText == "NCalc Error ❌" || DisplayText == "Div By Zero Not Defined ❌")
+        if (IsErrorState(DisplayText))
         {
             DisplayText = ".";
             CursorPosition = 1;
@@ -339,7 +338,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         if (_isEditing || string.IsNullOrWhiteSpace(text))
             return;
 
-        if (DisplayText == "NCalc Error ❌" || DisplayText == "Div By Zero Not Defined ❌")
+        if (IsErrorState(DisplayText))
         {
             DisplayText = text;
             CursorPosition = text.Length;
@@ -364,7 +363,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         if (_isEditing)
             return;
 
-        if (DisplayText == "NCalc Error ❌" || DisplayText == "Div By Zero Not Defined ❌")
+        if (IsErrorState(DisplayText))
         {
             DisplayText = "";
             CursorPosition = 0;
@@ -397,7 +396,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     {
         if (_isEditing ||
             string.IsNullOrEmpty(DisplayText) ||
-            DisplayText == "NCalc Error ❌")
+            IsErrorState(DisplayText))
         {
             return;
         }
@@ -421,7 +420,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     {
         if (_isEditing ||
             string.IsNullOrEmpty(DisplayText) ||
-            DisplayText == "NCalc Error ❌")
+            IsErrorState(DisplayText))
         {
             return;
         }
@@ -467,6 +466,16 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         ExpressionText = "";
     }
 
+    private bool IsErrorState(string text)
+    {
+        return text == "NCalc Error ❌" ||
+               text == "Div By Zero Not Defined ❌" ||
+               text == "The Answer is Infinity ♾️" ||
+               text == "Bro, STOP Annoying my ALU! 😭" ||
+               text == "Why don't you Define it? 🤔" ||
+               text == "Go on. I have shut down my ALU... 😴";
+    }
+
     #endregion
 
     #region Calculation
@@ -479,6 +488,11 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
 
             if (string.IsNullOrWhiteSpace(originalExpression))
                 return;
+
+            if (IsDivisionByZero(originalExpression))
+            {
+                throw new DivideByZeroException();
+            }
 
             string expressionToEvaluate = PrepareExpression(originalExpression);
 
@@ -509,7 +523,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
                 double angle = isDeg ? DegreesToRadians(value) : value;
 
                 if (Math.Abs(Math.Cos(angle)) < 1e-12)
-                    return double.NaN;
+                    throw new DivideByZeroException();
 
                 return Math.Tan(angle);
             };
@@ -604,8 +618,12 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
 
             double numericResult = Convert.ToDouble(result);
 
-            if (double.IsNaN(numericResult) ||
-                double.IsInfinity(numericResult))
+            if (double.IsInfinity(numericResult))
+            {
+                throw new DivideByZeroException();
+            }
+
+            if (double.IsNaN(numericResult))
             {
                 DisplayText = "NCalc Error ❌";
                 ExpressionText = "";
@@ -625,19 +643,49 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         }
         catch (DivideByZeroException)
         {
-            DisplayText = "Div By Zero Not Defined ❌";
-            ExpressionText = "";
-            CursorPosition = DisplayText.Length;
+            TriggerDivisionByZeroError();
         }
         catch (Exception ex)
         {
-            DisplayText = "NCalc Error ❌";
-            ExpressionText = "";
-            CursorPosition = DisplayText.Length;
+            if (ex.Message.Contains("Attempted to divide by zero") || ex.InnerException is DivideByZeroException)
+            {
+                TriggerDivisionByZeroError();
+            }
+            else
+            {
+                DisplayText = "NCalc Error ❌";
+                ExpressionText = "";
+                CursorPosition = DisplayText.Length;
 
-            System.Diagnostics.Debug.WriteLine(
-                $"Calculation Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine(
+                    $"Calculation Error: {ex.Message}");
+            }
         }
+    }
+
+    private bool IsDivisionByZero(string expression)
+    {
+        string clean = expression.Replace(" ", "").Replace("÷", "/");
+        return Regex.IsMatch(clean, @"/(0(\.0+)?|\(0(\.0+)?\))$") ||
+               Regex.IsMatch(clean, @"/(0(\.0+)?|\(0(\.0+)?\))[\+\-\*\/\)]");
+    }
+
+    private void TriggerDivisionByZeroError()
+    {
+        _divisionByZeroCount++;
+
+        string errorMessage = _divisionByZeroCount switch
+        {
+            5 => "The Answer is Infinity ♾️",
+            6 => "Bro, STOP Annoying my ALU! 😭",
+            7 => "Why don't you Define it? 🤔",
+            8 => "Go on. I have shut down my ALU... 😴",
+            _ => "Div By Zero Not Defined ❌"
+        };
+
+        DisplayText = errorMessage;
+        ExpressionText = "";
+        CursorPosition = DisplayText.Length;
     }
 
     private string PrepareExpression(string input)
@@ -798,7 +846,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     private static double RadiansToDegrees(double radians)
     {
         return radians * 180.0 / Math.PI;
-    }
+    }F
 
     private double GetFactorial(double n)
     {
