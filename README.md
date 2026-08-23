@@ -10,7 +10,7 @@ Lamina ✦ is a `WinUI 3 calculator` that is not only includes a Regular Calcula
 
 To get User-Made Modules, go to [Lamina ✦ Modules Repo](https://github.com/Chill-Astro/Lamina-Modules-Repo).
   
-**Target OS:** **Windows 11** ONLY.  |  **Latest Stable Version:** **v11.28000.16.0**
+**Target OS:** **Windows 11** ONLY.  |  **Latest Stable Version:** **v11.28000.17.0**
 
 **App Execution Aliases :** `lamina.exe` & `lmna.exe` 
 
@@ -41,20 +41,6 @@ Categories :
 
 ---
 
-## Bro's Cooking 💀 :
-
-Here's the New Advanced Calculator made with NCalc and Expression Editor.
-
-YOU CAN TYPE YOUR OWN MATH LET'S GOOOOOOOOOOOOOOOOOOOOOOOOOO!!!!!!!!!!!!!!!
-
-That too with the brand new History Sidebar feature and Persistent History on both Calculators!
-
-Coming Soon on September 5th!
-
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a70e35c9-0a8c-40e7-98d6-dd2e5fe0db18" />
-
----
-
 ## A Temporary Halt on Development :
 
 - I wouldn't provide updates for the next couple of months.
@@ -72,10 +58,15 @@ Coming Soon on September 5th!
 - Fast and Error-Proof Calculations. ✅
 - High Precision for decimals. ✅
 - Modern UI with Fluid Animations and Transitions. ✅
-- History Support for the Base Calculator UI. ✅
+- History Support for Basic and Advanced Calculator. ✅
 - Theme switching built in. ✅
 - Backdrop switching betwwen Mica Alt, Mica and Acrylic! ✅
 - Eggcelent Looking Splash Screen that can be toggled OFF. ✅
+- FULL Power of NCalc in Advanced Calculator. ✅
+- Expression Editor for Advanced Calculations ( Yes ur OWN MATH! ). ✅
+- Proper History Sidebar for Large Window Sizes and Full Screen. ✅
+- Persistent History that survives App Restarts. ✅
+- Recall Expression Button for Advanced Calculator. ✅
 - Available in both Msix & Installer Variants. ✅
 
 ---
@@ -102,7 +93,7 @@ Coming Soon on September 5th!
 
 <H2>
 
-v`11`.`26100`.`16`.`0`
+v`11`.`26100`.`17`.`0`
 
 </H2>
 
@@ -110,7 +101,7 @@ v`11`.`26100`.`16`.`0`
 
 - `11` -> Target OS ( She IS for Windows 11 )
 - `28000` -> Release SDK Version ( Currently She uses 28000.xxxx Versions of Windows 11 SDK )
-- `16` -> Release Index ( Here 16 stands for the 16th Release Of Course! )
+- `17` -> Release Index ( Here 17 is the 17th Release Of Course! )
 - `0` -> Filler Number ( Package.appxmanifest doesn't allow me to edit this Number so it's there for NOTHING 💀 )
 
 ---
