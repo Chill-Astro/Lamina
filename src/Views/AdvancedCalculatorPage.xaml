@@ -230,6 +230,54 @@
             </ToolTipService.ToolTip>
         </Button>
 
+        <!--  Recall Button  -->
+        <Button
+            x:Name="RecallButton"
+            Width="35"
+            Height="35"
+            Margin="70,-52,1,0"
+            Padding="1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Background="Transparent"
+            BorderThickness="0"
+            Click="RecallButton_Click"
+            Content="&#xE777;"
+            CornerRadius="3"
+            FontFamily="Segoe Fluent Icons"
+            FontSize="16">
+            <Button.KeyboardAccelerators>
+                <KeyboardAccelerator Key="R" Modifiers="Control" />
+            </Button.KeyboardAccelerators>
+            <ToolTipService.ToolTip>
+                <ToolTip Content="Recall Last Expression (Ctrl + R)" />
+            </ToolTipService.ToolTip>
+        </Button>
+
+        <!--  Info Button  -->
+        <Button
+            x:Name="InfoButton"
+            Width="35"
+            Height="35"
+            Margin="105,-52,1,0"
+            Padding="1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Background="Transparent"
+            BorderThickness="0"
+            Click="InfoButton_Click"
+            Content="&#xE946;"
+            CornerRadius="3"
+            FontFamily="Segoe Fluent Icons"
+            FontSize="16">
+            <Button.KeyboardAccelerators>
+                <KeyboardAccelerator Key="I" Modifiers="Control" />
+            </Button.KeyboardAccelerators>
+            <ToolTipService.ToolTip>
+                <ToolTip Content="Button Info (Ctrl + I)" />
+            </ToolTipService.ToolTip>
+        </Button>
+
         <!--  Resizable Magic Button Grid that Sucks to Develop fr fr 🥀  -->
         <Grid
             x:Name="ContentGrid"
@@ -248,23 +296,36 @@
             </Grid.ColumnDefinitions>
 
             <!--  Calculator's Display which is a Part of a Computers Display ( Displayception )  -->
-            <TextBox
-                x:Name="DisplayTextBox"
+            <Grid
                 Grid.Row="1"
                 Grid.Column="0"
-                Margin="12,7,12,10"
-                HorizontalAlignment="Stretch"
-                Background="Transparent"
-                BorderThickness="0"
-                FontSize="48"
-                FontWeight="SemiBold"
-                GotFocus="DisplayTextBox_GotFocus"
-                LostFocus="DisplayTextBox_LostFocus"
-                SizeChanged="DisplayTextBox_SizeChanged"
-                Text="{x:Bind ViewModel.DisplayText, Mode=TwoWay}"
-                TextAlignment="Right"
-                TextChanged="DisplayTextBox_TextChanged"
-                TextWrapping="NoWrap" />
+                Margin="0,-10,0,0">
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                    <TextBlock
+                        x:Name="ExpressionTextBlock"
+                        Margin="12,-2,12,0"
+                        HorizontalAlignment="Stretch"
+                        FontSize="14"
+                        Opacity="0.7"
+                        Text="{x:Bind ViewModel.ExpressionText, Mode=OneWay}"
+                        TextAlignment="Right" />
+                    <TextBox
+                        x:Name="DisplayTextBox"
+                        Margin="12,7,12,10"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        FontSize="48"
+                        FontWeight="SemiBold"
+                        GotFocus="DisplayTextBox_GotFocus"
+                        LostFocus="DisplayTextBox_LostFocus"
+                        SizeChanged="DisplayTextBox_SizeChanged"
+                        Text="{x:Bind ViewModel.DisplayText, Mode=TwoWay}"
+                        TextAlignment="Right"
+                        TextChanged="DisplayTextBox_TextChanged"
+                        TextWrapping="NoWrap" />
+                </StackPanel>
+            </Grid>
             <Grid
                 x:Name="ButtonsGrid"
                 Grid.Row="2"

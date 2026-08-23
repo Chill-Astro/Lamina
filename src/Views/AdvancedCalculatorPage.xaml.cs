@@ -242,6 +242,12 @@ public sealed partial class AdvancedCalculatorPage : Page
                 case VirtualKey.H when shift:
                     OpenHistoryDialog();
                     break;
+                case VirtualKey.R when ctrl:
+                    ViewModel.RecallCommand.Execute(null);
+                    break;
+                case VirtualKey.I when ctrl:
+                    InfoButton_Click(null, null);
+                    break;
                 default:
                     handled = false;
                     break;
@@ -269,6 +275,45 @@ public sealed partial class AdvancedCalculatorPage : Page
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Paste Error: {ex.Message}");
+        }
+    }
+
+    private void RecallButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.RecallCommand.Execute(null);
+    }
+
+    private async void InfoButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isDialogOpen) return;
+        _isDialogOpen = true;
+
+        try
+        {
+            var infoPage = new InfoPage();
+            infoPage.HorizontalAlignment = HorizontalAlignment.Stretch;
+            infoPage.VerticalAlignment = VerticalAlignment.Stretch;
+
+            var dialog = new ContentDialog
+            {
+                Content = infoPage,
+                CloseButtonText = "Close",
+                XamlRoot = this.XamlRoot,
+                RequestedTheme = this.RequestedTheme,
+                MaxWidth = 600,
+                MaxHeight = 500,
+                MinHeight = 300,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                CloseButtonStyle = (Style)Application.Current.Resources["AccentButtonStyle"],
+                Padding = new Thickness(20),
+            };
+
+            await dialog.ShowAsync();
+        }
+        finally
+        {
+            _isDialogOpen = false;
         }
     }
 

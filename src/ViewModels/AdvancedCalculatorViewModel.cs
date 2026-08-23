@@ -13,7 +13,8 @@ namespace Lamina.ViewModels;
 public partial class AdvancedCalculatorViewModel : ObservableObject
 {
     private string _displayText = "";
-    private string _operationText = "";
+    private string _expressionText = "";
+    private string _lastExpression = "";
     private bool _isInverse;
     private string _angleModeText = "DEG";
     private int _cursorPosition;
@@ -39,6 +40,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         MoveCursorLeftCommand = new RelayCommand(MoveCursorLeft);
         MoveCursorRightCommand = new RelayCommand(MoveCursorRight);
         MoveCursorToPositionCommand = new RelayCommand<int>(MoveCursorToPosition);
+        RecallCommand = new RelayCommand(Recall);
 
         LoadHistoryAsync();
     }
@@ -116,10 +118,16 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         }
     }
 
-    public string OperationText
+    public string ExpressionText
     {
-        get => _operationText;
-        set => SetProperty(ref _operationText, value);
+        get => _expressionText;
+        set => SetProperty(ref _expressionText, value);
+    }
+
+    public string LastExpression
+    {
+        get => _lastExpression;
+        set => SetProperty(ref _lastExpression, value);
     }
 
     public string AngleModeText
@@ -162,7 +170,17 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     public bool IsEditing
     {
         get => _isEditing;
-        set => SetProperty(ref _isEditing, value);
+        set
+        {
+            if (SetProperty(ref _isEditing, value))
+            {
+                // Clear secondary display when user starts editing
+                if (value && !string.IsNullOrEmpty(ExpressionText))
+                {
+                    ExpressionText = "";
+                }
+            }
+        }
     }
 
     #endregion
@@ -183,6 +201,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     public ICommand MoveCursorLeftCommand { get; }
     public ICommand MoveCursorRightCommand { get; }
     public ICommand MoveCursorToPositionCommand { get; }
+    public ICommand RecallCommand { get; }
 
     #endregion
 
@@ -210,6 +229,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
             input == "Pi" ||
             input == "π";
 
+        // Allow button inputs when editing, but don't process them
         if (_isEditing && !isFunction)
             return;
 
@@ -369,7 +389,7 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
     private void ClearAll()
     {
         DisplayText = "";
-        OperationText = "";
+        ExpressionText = "";
         CursorPosition = 0;
     }
 
@@ -435,6 +455,16 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
         AngleModeText = AngleModeText == "DEG"
             ? "RAD"
             : "DEG";
+    }
+
+    private void Recall()
+    {
+        if (string.IsNullOrEmpty(LastExpression))
+            return;
+
+        DisplayText = LastExpression;
+        CursorPosition = LastExpression.Length;
+        ExpressionText = "";
     }
 
     #endregion
@@ -567,6 +597,8 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
             if (result == null)
             {
                 DisplayText = "NCalc Error ❌";
+                ExpressionText = "";
+                CursorPosition = DisplayText.Length;
                 return;
             }
 
@@ -576,26 +608,31 @@ public partial class AdvancedCalculatorViewModel : ObservableObject
                 double.IsInfinity(numericResult))
             {
                 DisplayText = "NCalc Error ❌";
+                ExpressionText = "";
+                CursorPosition = DisplayText.Length;
                 return;
             }
 
-            OperationText = originalExpression + " =";
+            ExpressionText = originalExpression + " =";
             DisplayText = numericResult.ToString("G15");
             CursorPosition = DisplayText.Length;
+            LastExpression = originalExpression;
 
             CalculationHistory.Add(
-                $"{OperationText} {DisplayText}");
+                $"{ExpressionText} {DisplayText}");
 
             SaveHistoryAsync();
         }
         catch (DivideByZeroException)
         {
             DisplayText = "Div By Zero Not Defined ❌";
+            ExpressionText = "";
             CursorPosition = DisplayText.Length;
         }
         catch (Exception ex)
         {
             DisplayText = "NCalc Error ❌";
+            ExpressionText = "";
             CursorPosition = DisplayText.Length;
 
             System.Diagnostics.Debug.WriteLine(
