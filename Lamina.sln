@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.0.11222.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lamina", "src/Lamina.csproj", "{054F7CB1-05A9-D89F-46D4-3FD428208C29}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lamina", "Lamina/Lamina.csproj", "{054F7CB1-05A9-D89F-46D4-3FD428208C29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
