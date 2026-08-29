@@ -3,8 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="using:Lamina.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="Transparent"
     mc:Ignorable="d">
 
@@ -71,8 +71,8 @@
                         <FontIcon
                             Margin="0,0,12,0"
                             VerticalAlignment="Center"
-                            FontSize="16"
                             FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            FontSize="16"
                             Glyph="&#xE790;" />
                         <TextBlock
                             Grid.Column="1"
@@ -102,8 +102,8 @@
                             <FontIcon
                                 Margin="0,0,12,0"
                                 VerticalAlignment="Center"
-                                FontSize="16"
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                FontSize="16"
                                 Glyph="&#xEB42;" />
                             <TextBlock
                                 Grid.Column="1"
@@ -131,8 +131,8 @@
                         <FontIcon
                             Margin="0,0,12,0"
                             VerticalAlignment="Center"
-                            FontSize="16"
                             FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            FontSize="16"
                             Glyph="&#xE78B;" />
                         <TextBlock
                             Grid.Column="1"
@@ -168,8 +168,8 @@
                 Spacing="32"
                 Visibility="Collapsed">
                 <FontIcon
-                    FontSize="100"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
+                    FontSize="100"
                     Foreground="{ThemeResource AccentButtonBackground}"
                     Glyph="&#xEB51;" />
                 <TextBlock

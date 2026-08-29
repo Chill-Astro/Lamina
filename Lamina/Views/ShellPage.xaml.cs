@@ -134,7 +134,7 @@ public sealed partial class ShellPage : Page
                     Icon = new FontIcon
                     {
                         Glyph = "\uEA86",
-                        FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons")
+                        FontFamily = (Microsoft.UI.Xaml.Media.FontFamily)Application.Current.Resources["SymbolThemeFontFamily"]
                     },
                     Tag = file.Path
                 };

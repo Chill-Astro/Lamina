@@ -156,7 +156,7 @@
                     SelectsOnInvoked="False"
                     Tapped="OnAddScriptieTapped">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE710;" />
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE710;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>
