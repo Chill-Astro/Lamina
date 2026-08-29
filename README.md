@@ -12,6 +12,8 @@ To get User-Made Modules, go to [Lamina ✦ Modules Repo](https://github.com/Chi
   
 **Target OS:** **Windows 11** ONLY.  |  **Latest Stable Version:** **v11.28000.17.0**
 
+**WINDOWS 10 SUPPORT IS RETURNING IN v11.28000.18.0!!!**
+
 **App Execution Aliases :** `lamina.exe` & `lmna.exe` 
 
 **Codename** : `LMNA`, formerly `Calc+ ( till v11 )` & `CalcX-11 ( Pre-Alpha )`
@@ -27,6 +29,14 @@ To get User-Made Modules, go to [Lamina ✦ Modules Repo](https://github.com/Chi
 
 > [!NOTE]
 > Project [Trust My Msix!](https://github.com/Chill-Astro/Trust-My-Msix) can be used to Import the Self-Signed Certificate of the `.msix ` Version of Lamina ✦. A Copy is given in [Releases](https://github.com/Chill-Astro/Lamina/releases/latest) for Usage.
+
+---
+
+## WINDOWS 10 SUPPORT IS RETURNING!!!
+
+<kbd>
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8cc39f44-46b7-46aa-9d98-da837acc7bc8" />
+</kbd>
 
 ---
 
