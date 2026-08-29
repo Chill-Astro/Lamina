@@ -16,9 +16,6 @@ public partial class OnboardingViewModel : ObservableRecipient // The BEAUTIFUL 
     [ObservableProperty]
     private bool _isBackdropCardDisabled;
 
-    [ObservableProperty]
-    private string _backdropInfoText;
-
     public OnboardingViewModel(IMicaService micaService, ILocalSettingsService localSettingsService)
     {
         _micaService = micaService;
@@ -27,7 +24,6 @@ public partial class OnboardingViewModel : ObservableRecipient // The BEAUTIFUL 
         // Check Windows version and handle Windows 10 restrictions
         bool isWindows10 = Services.WindowsVersionService.IsWindows10();
         IsBackdropCardDisabled = isWindows10;
-        BackdropInfoText = isWindows10 ? "This setting is for Windows 11 Only! :(" : string.Empty;
 
         // Sync initial backdrop index
         Task.Run(async () => {

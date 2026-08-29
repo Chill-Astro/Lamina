@@ -144,8 +144,8 @@
                             <FontIcon
                                 Margin="0,0,12,0"
                                 VerticalAlignment="Center"
-                                FontSize="16"
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                FontSize="16"
                                 Glyph="&#xE790;" />
                             <TextBlock
                                 Grid.Column="1"
@@ -170,7 +170,7 @@
                         BorderBrush="{ThemeResource CardStrokeColorDefault}"
                         BorderThickness="1"
                         CornerRadius="8"
-                        Opacity="{x:Bind ViewModel.IsBackdropCardDisabled, Mode=OneWay, Converter={StaticResource BooleanToOpacityConverter}}">
+                        Visibility="{x:Bind ViewModel.IsBackdropCardDisabled, Mode=OneWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                         <StackPanel Spacing="8">
                             <Grid ColumnDefinitions="Auto,*,Auto">
                                 <FontIcon
@@ -185,7 +185,6 @@
                                 <ComboBox
                                     Grid.Column="2"
                                     MinWidth="150"
-                                    IsEnabled="{x:Bind ViewModel.IsBackdropCardDisabled, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"
                                     SelectedIndex="{x:Bind ViewModel.SelectedBackdropIndex, Mode=TwoWay}">
                                     <ComboBoxItem Content="Mica Alt" />
                                     <ComboBoxItem Content="Mica" />
@@ -194,15 +193,6 @@
                             </Grid>
                         </StackPanel>
                     </Border>
-                    <TextBlock
-                        Margin="0,8,0,0"
-                        FontSize="12"
-                        Foreground="{ThemeResource SystemFillColorAttentionBrush}"
-                        Visibility="{x:Bind ViewModel.IsBackdropCardDisabled, Mode=OneWay, Converter={StaticResource StringToVisibilityConverter}}">
-                        <Run FontFamily="{StaticResource SymbolThemeFontFamily}" Text="&#xE946;" />
-                        <Run Text="{x:Bind ViewModel.BackdropInfoText, Mode=OneWay}" />
-                    </TextBlock>
-
                     <!--  Splash Screen Setting  -->
                     <Border
                         Padding="16"
@@ -215,8 +205,8 @@
                             <FontIcon
                                 Margin="0,0,12,0"
                                 VerticalAlignment="Center"
-                                FontSize="16"
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                FontSize="16"
                                 Glyph="&#xE78B;" />
                             <TextBlock
                                 Grid.Column="1"

@@ -31,7 +31,6 @@ public partial class SettingsViewModel : ObservableRecipient
     [ObservableProperty] private int _selectedThemeIndex;
     [ObservableProperty] private int _selectedBackdropIndex;
     [ObservableProperty] private bool _isBackdropCardDisabled;
-    [ObservableProperty] private string _backdropInfoText;
 
     public SettingsViewModel(IThemeSelectorService themeSelectorService, IMicaService micaService, ILocalSettingsService localSettingsService)
     {
@@ -46,7 +45,6 @@ public partial class SettingsViewModel : ObservableRecipient
         // Check Windows version and handle Windows 10 restrictions
         bool isWindows10 = Services.WindowsVersionService.IsWindows10();
         IsBackdropCardDisabled = isWindows10;
-        BackdropInfoText = isWindows10 ? "This setting is for Windows 11 Only! :(" : string.Empty;
 
         Task.Run(async () => {
             var savedIndex = await _localSettingsService.ReadSettingAsync<int?>("AppBackdropIndex") ?? 0;

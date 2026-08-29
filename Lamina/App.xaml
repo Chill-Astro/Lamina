@@ -18,6 +18,7 @@
             <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
             <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <helpers:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter" />
+            <helpers:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
             <helpers:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
 
             <ResourceDictionary.ThemeDictionaries>

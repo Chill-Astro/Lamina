@@ -11,9 +11,7 @@
     <!--  The BEAUTIFUL and Anti-Corporate Onboarding Page ( Btw Alex Brush is W Font for Someone who likes Cursive like me! )  -->
 
     <Page.Resources>
-        <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter" />
-        <helpers:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter" />
-        <helpers:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+        <helpers:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
     </Page.Resources>
 
     <Page.Transitions>
@@ -98,7 +96,7 @@
                     BorderBrush="{ThemeResource CardStrokeColorDefault}"
                     BorderThickness="1"
                     CornerRadius="8"
-                    Opacity="{x:Bind ViewModel.IsBackdropCardDisabled, Mode=OneWay, Converter={StaticResource BooleanToOpacityConverter}}">
+                    Visibility="{x:Bind ViewModel.IsBackdropCardDisabled, Mode=OneWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                     <StackPanel Spacing="8">
                         <Grid ColumnDefinitions="Auto,*,Auto">
                             <FontIcon
@@ -114,7 +112,6 @@
                             <ComboBox
                                 Grid.Column="2"
                                 Width="120"
-                                IsEnabled="{x:Bind ViewModel.IsBackdropCardDisabled, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"
                                 SelectedIndex="{x:Bind ViewModel.SelectedBackdropIndex, Mode=TwoWay}">
                                 <ComboBoxItem Content="Mica Alt" />
                                 <ComboBoxItem Content="Mica" />
@@ -123,15 +120,6 @@
                         </Grid>
                     </StackPanel>
                 </Border>
-                <TextBlock
-                    Margin="0,8,0,0"
-                    FontSize="12"
-                    Foreground="{ThemeResource SystemFillColorAttentionBrush}"
-                    Visibility="{x:Bind ViewModel.IsBackdropCardDisabled, Mode=OneWay, Converter={StaticResource StringToVisibilityConverter}}">
-                    <Run FontFamily="{StaticResource SymbolThemeFontFamily}" Text="&#xE946;" />
-                    <Run Text="{x:Bind ViewModel.BackdropInfoText, Mode=OneWay}" />
-                </TextBlock>
-
                 <Border
                     Width="280"
                     Padding="12"
