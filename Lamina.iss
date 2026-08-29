@@ -1,12 +1,12 @@
 #define MyAppName "Lamina ✦"
-#define MyAppVersion "11.28000.17.0"
+#define MyAppVersion "11.28000.18.0"
 #define MyAppPublisher "Chill-Astro Software"
 #define MyAppURL "https://github.com/Chill-Astro/Lamina-Calculator"
 
 ; Define both architecture-specific filenames
-#define MyAppMsixX64 "Lamina_11.28000.17.0_x64.msix"
-#define MyAppMsixArm64 "Lamina_11.28000.17.0_arm64.msix"
-#define MyAppCertName "Lamina_11.28000.17.0.cer"
+#define MyAppMsixX64 "Lamina_11.28000.18.0_x64.msix"
+#define MyAppMsixArm64 "Lamina_11.28000.18.0_arm64.msix"
+#define MyAppCertName "Lamina_11.28000.18.0.cer"
 
 [Setup]
 AppId={{633C1E5F-90A3-492B-933F-84ECEE95A462}
@@ -27,7 +27,7 @@ SolidCompression=yes
 
 [Files]
 ; Include both MSIX files in the installer package
-Source: "C:\Users\Master\Chill-Astro\Lamina-Calculator\src\Installer\*"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Master\Chill-Astro\Lamina-Calculator\Lamina\Installer\*"; DestDir: "{app}"; Flags: ignoreversion
 
 [Run]
 ; 1. Install the Certificate (Universal for x64 and ARM64)
