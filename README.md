@@ -10,7 +10,7 @@ Lamina ✦ is a `WinUI 3 calculator` that is not only includes a Regular Calcula
 
 To get User-Made Modules, go to [Lamina ✦ Modules Repo](https://github.com/Chill-Astro/Lamina-Modules-Repo).
   
-**Target OS:** **Windows 11** & **Windows 10**.  |  **Latest Stable Version:** **v11.28000.18.0**
+**Target OS:** **Windows 11** & **Windows 10** |  **Latest Stable Version:** **v11.28000.18.0**
 
 **App Execution Aliases :** `lamina.exe` & `lmna.exe` 
 
