@@ -13,7 +13,7 @@
 	<Nullable>enable</Nullable>
 	<UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
 	  <SelfContained>true</SelfContained>
 	  <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
 	  <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>

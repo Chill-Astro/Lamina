@@ -38,6 +38,8 @@ public class MicaService : IMicaService
     public async Task LoadMicaSettingAsync()
     {
         var savedIndex = await _localSettingsService.ReadSettingAsync<int?>(MicaSettingsKey) ?? 0;
-        SetBackdrop(savedIndex);
+        // Force Acrylic (index 2) on Windows 10
+        var finalIndex = WindowsVersionService.IsWindows10() ? 2 : savedIndex;
+        SetBackdrop(finalIndex);
     }
 }

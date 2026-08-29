@@ -1,7 +1,8 @@
 ﻿<Application
     x:Class="Lamina.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:helpers="using:Lamina.Helpers">
 
     <!--  The GOATED Accent Color Button Theme from Deepseek  -->
     <Application.Resources>
@@ -12,6 +13,13 @@
                 <ResourceDictionary Source="/Styles/Thickness.xaml" />
                 <ResourceDictionary Source="/Styles/TextBlock.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Converters -->
+            <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+            <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <helpers:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter" />
+            <helpers:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+            
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="AccentButtonBackground" Color="{ThemeResource SystemAccentColorDark1}" />

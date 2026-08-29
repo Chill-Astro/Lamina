@@ -30,6 +30,8 @@ public partial class SettingsViewModel : ObservableRecipient
     [ObservableProperty] private string _appVersionText;
     [ObservableProperty] private int _selectedThemeIndex;
     [ObservableProperty] private int _selectedBackdropIndex;
+    [ObservableProperty] private bool _isBackdropCardDisabled;
+    [ObservableProperty] private string _backdropInfoText;
 
     public SettingsViewModel(IThemeSelectorService themeSelectorService, IMicaService micaService, ILocalSettingsService localSettingsService)
     {
@@ -41,9 +43,19 @@ public partial class SettingsViewModel : ObservableRecipient
         // Index for iLikeToFryMyEyes (Light) and iAmTheLoanWolf (Dark) theme or whatever Binbows 11 says.
         _selectedThemeIndex = (int)_themeSelectorService.Theme;
 
+        // Check Windows version and handle Windows 10 restrictions
+        bool isWindows10 = Services.WindowsVersionService.IsWindows10();
+        IsBackdropCardDisabled = isWindows10;
+        BackdropInfoText = isWindows10 ? "This setting is for Windows 11 Only! :(" : string.Empty;
+
         Task.Run(async () => {
             var savedIndex = await _localSettingsService.ReadSettingAsync<int?>("AppBackdropIndex") ?? 0;
-            App.MainWindow.DispatcherQueue.TryEnqueue(() => { SelectedBackdropIndex = savedIndex; });
+            var finalIndex = isWindows10 ? 2 : savedIndex;
+            App.MainWindow.DispatcherQueue.TryEnqueue(() => { 
+                SelectedBackdropIndex = finalIndex;
+                // Apply the backdrop immediately on UI thread
+                _micaService.SetBackdrop(finalIndex);
+            });
         });
 
         AppVersionText = $" v{CurrentAppVersion}";
@@ -53,6 +65,16 @@ public partial class SettingsViewModel : ObservableRecipient
 
     partial void OnSelectedBackdropIndexChanged(int value)
     {
+        // Prevent backdrop changes on Windows 10, but still apply Acrylic
+        if (IsBackdropCardDisabled)
+        {
+            // Force back to Acrylic (index 2) and apply it
+            SelectedBackdropIndex = 2;
+            _micaService.SetBackdrop(2);
+            _ = _micaService.SaveMicaSettingAsync(2);
+            return;
+        }
+        
         _micaService.SetBackdrop(value);
         _ = _micaService.SaveMicaSettingAsync(value);
     }
