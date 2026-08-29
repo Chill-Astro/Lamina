@@ -169,7 +169,7 @@
             Click="HistoryButton_Click"
             Content="&#xe81c;"
             CornerRadius="3"
-            FontFamily="Segoe Fluent Icons"
+            FontFamily="{StaticResource SymbolThemeFontFamily}"
             FontSize="16">
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator Key="H" Modifiers="Control" />
@@ -193,7 +193,7 @@
             Click="CopyButton_Click"
             Content="&#xe8c8;"
             CornerRadius="3"
-            FontFamily="Segoe Fluent Icons"
+            FontFamily="{StaticResource SymbolThemeFontFamily}"
             FontSize="16">
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator Key="C" Modifiers="Control" />
@@ -217,7 +217,7 @@
             Click="PasteButton_Click"
             Content="&#xE77F;"
             CornerRadius="3"
-            FontFamily="Segoe Fluent Icons"
+            FontFamily="{StaticResource SymbolThemeFontFamily}"
             FontSize="16">
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator Key="V" Modifiers="Control" />
@@ -297,7 +297,7 @@
                     Grid.Column="0"
                     Command="{x:Bind ViewModel.PercentCommand}"
                     Content="&#xe94c;"
-                    FontFamily="Segoe Fluent Icons"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                     Style="{StaticResource CalculatorButtonStyle}" />
                 <Button
                     x:Name="BtnCE"
@@ -319,7 +319,7 @@
                     Grid.Column="3"
                     Command="{x:Bind ViewModel.BackspaceCommand}"
                     Content="&#xe750;"
-                    FontFamily="Segoe Fluent Icons"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                     Style="{StaticResource CalculatorButtonStyle}" />
 
                 <!--  Row 2  -->
@@ -350,7 +350,7 @@
                     Command="{x:Bind ViewModel.SetOperatorCommand}"
                     CommandParameter="÷"
                     Content="&#xE94A;"
-                    FontFamily="Segoe Fluent Icons"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                     Style="{StaticResource CalculatorButtonStyle}" />
 
                 <!--  Row 3  -->
@@ -385,7 +385,7 @@
                     Command="{x:Bind ViewModel.SetOperatorCommand}"
                     CommandParameter="×"
                     Content="&#xE947;"
-                    FontFamily="Segoe Fluent Icons"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                     Style="{StaticResource CalculatorButtonStyle}" />
 
                 <!--  Row 4  -->
@@ -420,7 +420,7 @@
                     Command="{x:Bind ViewModel.SetOperatorCommand}"
                     CommandParameter="-"
                     Content="&#xE949;"
-                    FontFamily="Segoe Fluent Icons"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                     Style="{StaticResource CalculatorButtonStyle}" />
 
                 <!--  Row 5  -->
@@ -455,7 +455,7 @@
                     Command="{x:Bind ViewModel.SetOperatorCommand}"
                     CommandParameter="+"
                     Content="&#xE948;"
-                    FontFamily="Segoe Fluent Icons"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                     Style="{StaticResource CalculatorButtonStyle}" />
 
                 <!--  Row 6  -->
@@ -488,7 +488,7 @@
                     Grid.Column="3"
                     Command="{x:Bind ViewModel.CalculateCommand}"
                     Content="&#xe94e;"
-                    FontFamily="Segoe Fluent Icons"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                     Style="{StaticResource AccentButtonStyle}" />
             </Grid>
 
@@ -586,7 +586,7 @@
                         Click="ClearHistoryButton_Click"
                         Content="&#xe74d;"
                         CornerRadius="3"
-                        FontFamily="Segoe Fluent Icons"
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
                         FontSize="16">
                         <Button.Resources>
                             <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent" />

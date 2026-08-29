@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Lamina.Views.OnboardingPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -41,7 +41,7 @@
                     Click="Next_Click"
                     Content="&#xE72A;"
                     CornerRadius="8"
-                    FontFamily="Segoe Fluent Icons"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                     FontSize="18"
                     Style="{StaticResource AccentButtonStyle}" />
             </StackPanel>
@@ -74,6 +74,7 @@
                             Margin="0,0,12,0"
                             VerticalAlignment="Center"
                             FontSize="16"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
                             Glyph="&#xE790;" />
                         <TextBlock
                             Grid.Column="1"
@@ -104,6 +105,7 @@
                                 Margin="0,0,12,0"
                                 VerticalAlignment="Center"
                                 FontSize="16"
+                                FontFamily="{StaticResource SymbolThemeFontFamily}"
                                 Glyph="&#xEB42;" />
                             <TextBlock
                                 Grid.Column="1"
@@ -119,13 +121,16 @@
                                 <ComboBoxItem Content="Acrylic" />
                             </ComboBox>
                         </Grid>
-                        <TextBlock
-                            FontSize="11"
-                            Foreground="{ThemeResource SystemFillColorAttentionBrush}"
-                            Text="{x:Bind ViewModel.BackdropInfoText, Mode=OneWay}"
-                            Visibility="{x:Bind ViewModel.BackdropInfoText, Mode=OneWay, Converter={StaticResource StringToVisibilityConverter}}" />
                     </StackPanel>
                 </Border>
+                <TextBlock
+                    Margin="0,8,0,0"
+                    FontSize="12"
+                    Foreground="{ThemeResource SystemFillColorAttentionBrush}"
+                    Visibility="{x:Bind ViewModel.IsBackdropCardDisabled, Mode=OneWay, Converter={StaticResource StringToVisibilityConverter}}">
+                    <Run FontFamily="{StaticResource SymbolThemeFontFamily}" Text="&#xE946;" />
+                    <Run Text="{x:Bind ViewModel.BackdropInfoText, Mode=OneWay}" />
+                </TextBlock>
 
                 <Border
                     Width="280"
@@ -139,6 +144,7 @@
                             Margin="0,0,12,0"
                             VerticalAlignment="Center"
                             FontSize="16"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
                             Glyph="&#xE78B;" />
                         <TextBlock
                             Grid.Column="1"
@@ -162,7 +168,7 @@
                     Click="Next_Click"
                     Content="&#xE72A;"
                     CornerRadius="8"
-                    FontFamily="Segoe Fluent Icons"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                     FontSize="18"
                     Style="{StaticResource AccentButtonStyle}" />
             </StackPanel>
@@ -175,6 +181,7 @@
                 Visibility="Collapsed">
                 <FontIcon
                     FontSize="100"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                     Foreground="{ThemeResource AccentButtonBackground}"
                     Glyph="&#xEB51;" />
                 <TextBlock
@@ -189,7 +196,7 @@
                     Click="Finish_Click"
                     Content="&#xE72A;"
                     CornerRadius="8"
-                    FontFamily="Segoe Fluent Icons"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                     FontSize="18"
                     Style="{StaticResource AccentButtonStyle}" />
             </StackPanel>

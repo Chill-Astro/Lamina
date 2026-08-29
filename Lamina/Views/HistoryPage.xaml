@@ -34,7 +34,7 @@
                 VerticalAlignment="Center"
                 Click="ClearHistoryButton_Click"
                 Content="&#xe74d;"
-                FontFamily="Segoe Fluent Icons"
+                FontFamily="{StaticResource SymbolThemeFontFamily}"
                 Style="{StaticResource AccentButtonStyle}" />
         </Grid>
 
