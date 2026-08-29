@@ -10,9 +10,7 @@ Lamina ✦ is a `WinUI 3 calculator` that is not only includes a Regular Calcula
 
 To get User-Made Modules, go to [Lamina ✦ Modules Repo](https://github.com/Chill-Astro/Lamina-Modules-Repo).
   
-**Target OS:** **Windows 11** ONLY.  |  **Latest Stable Version:** **v11.28000.17.0**
-
-**WINDOWS 10 SUPPORT IS RETURNING IN v11.28000.18.0!!!**
+**Target OS:** **Windows 11** & **Windows 10**.  |  **Latest Stable Version:** **v11.28000.18.0**
 
 **App Execution Aliases :** `lamina.exe` & `lmna.exe` 
 
@@ -29,14 +27,6 @@ To get User-Made Modules, go to [Lamina ✦ Modules Repo](https://github.com/Chi
 
 > [!NOTE]
 > Project [Trust My Msix!](https://github.com/Chill-Astro/Trust-My-Msix) can be used to Import the Self-Signed Certificate of the `.msix ` Version of Lamina ✦. A Copy is given in [Releases](https://github.com/Chill-Astro/Lamina/releases/latest) for Usage.
-
----
-
-## WINDOWS 10 SUPPORT IS RETURNING!!!
-
-<kbd>
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8cc39f44-46b7-46aa-9d98-da837acc7bc8" />
-</kbd>
 
 ---
 
@@ -70,7 +60,7 @@ Categories :
 - Modern UI with Fluid Animations and Transitions. ✅
 - History Support for Basic and Advanced Calculator. ✅
 - Theme switching built in. ✅
-- Backdrop switching betwwen Mica Alt, Mica and Acrylic! ✅
+- Backdrop switching betwwen Mica Alt, Mica and Acrylic! ( WINDOWS 11 ONLY ) ✅
 - Eggcelent Looking Splash Screen that can be toggled OFF. ✅
 - FULL Power of NCalc in Advanced Calculator. ✅
 - Expression Editor for Advanced Calculations ( Yes ur OWN MATH! ). ✅
@@ -78,6 +68,8 @@ Categories :
 - Persistent History that survives App Restarts. ✅
 - Recall Expression Button for Advanced Calculator. ✅
 - Available in both Msix & Installer Variants. ✅
+- Windows 10 Icons if using Windows 10. ✅
+- Acrylic is Used by Deafult on Windows 10 and "Backdrop Setting" is Removed! ✅
 
 ---
 
@@ -220,7 +212,7 @@ Contributing :
 ## Building from Source :
 
 - Install Visual Studio 2026 with **WinUI Application Development** and **.NET Desktop Development** workloads.
-  - Windows 11.
+  - Windows 11 or Windows 10.
   - [XAML Styler](https://marketplace.visualstudio.com/items?itemName=TeamXavalon.XAMLStyler) is recommended for contributing.
   - .NET 10.0 Runtime LTS is must.
   - Get the latest Windows 11 SDK (28000.xxxx)
