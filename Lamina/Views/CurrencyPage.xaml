@@ -32,7 +32,7 @@
             Click="Refresh_Click"
             Content="&#xE72C;"
             CornerRadius="3"
-            FontFamily="Segoe Fluent Icons"
+            FontFamily="{StaticResource SymbolThemeFontFamily}"
             FontSize="16">
             <ToolTipService.ToolTip>
                 <ToolTip Content="Refresh currency list" />
@@ -85,7 +85,7 @@
                             BorderThickness="0"
                             Click="SwapButton_Click"
                             Content="&#xE8AB;"
-                            FontFamily="Segoe Fluent Icons"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
                             Style="{StaticResource SubtleButtonStyle}">
                             <ToolTipService.ToolTip>
                                 <ToolTip Content="Swap currencies" />
@@ -145,7 +145,7 @@
                         BorderThickness="0"
                         Click="CopyButton_Click"
                         Content="&#xE8C8;"
-                        FontFamily="Segoe Fluent Icons"
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
                         FontSize="14"
                         Style="{StaticResource SubtleButtonStyle}"
                         Visibility="Collapsed">

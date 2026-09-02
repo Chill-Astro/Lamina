@@ -75,7 +75,7 @@
                                 BorderThickness="0"
                                 Click="SwapButton_Click"
                                 Content="&#xE8AB;"
-                                FontFamily="Segoe Fluent Icons"
+                                FontFamily="{StaticResource SymbolThemeFontFamily}"
                                 Style="{StaticResource SubtleButtonStyle}">
                                 <ToolTipService.ToolTip>
                                     <ToolTip Content="Swap units" />
